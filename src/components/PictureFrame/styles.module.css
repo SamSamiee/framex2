@@ -1,0 +1,50 @@
+.wrapper {
+	/* background-color: rgb(215, 215, 215); */
+	width: 90vw;
+	max-width: 1000px;
+	/* padding: 20px; */
+}
+
+
+
+.card {
+	width: 100%;
+	aspect-ratio: 16/9;
+	border-radius: 13px;
+	overflow: hidden;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	gap: 4px;
+}
+
+.c1{
+	grid-template-areas: 
+	"item1 item1"
+	"item1 item1"
+	;
+}
+
+
+.c2{
+	grid-template-areas: 
+	"item1 item2"
+	"item1 item2"
+	;
+}
+
+
+.c3{
+	grid-template-areas: 
+	"item1 item2"
+	"item1 item3"
+	;
+}
+
+
+.c4{
+	grid-template-areas: 
+	"item1 item2"
+	"item3 item4"
+	;
+}

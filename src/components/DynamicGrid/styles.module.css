@@ -1,0 +1,10 @@
+.wrapper {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	padding: 5px;
+}
+
+.open {
+	background-color: rgb(232, 232, 232);
+}
