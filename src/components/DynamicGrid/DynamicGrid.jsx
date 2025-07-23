@@ -4,47 +4,32 @@ import styles from "./styles.module.css";
 
 function DynamicGrid({ size, frameNumber, setFrameNumber }) {
 	const [open, toggleOpen] = React.useState(false);
-	const [icon, setIcon] = React.useState("Grid");
+	console.log("DynamicGrid rendered...");
 
 	const icons = {
-		Grid: <Grid size={size} />,
-		Layout: <Layout size={size} />,
-		Columns: <Columns size={size} />,
-		Square: <Square size={size} />,
+		4: <Grid size={size} />,
+		3: <Layout size={size} />,
+		2: <Columns size={size} />,
+		1: <Square size={size} />,
 	};
-
-	switch (icon) {
-		case "Grid":
-			setFrameNumber(4);
-			break;
-		case "Layout":
-			setFrameNumber(3);
-			break;
-		case "Columns":
-			setFrameNumber(2);
-			break;
-		case "Square":
-			setFrameNumber(1);
-			break;
-		default:
-			setFrameNumber(frameNumber);
-	}
+	let icon = icons[frameNumber];
 
 	return (
-		<div class={`${styles.wrapper} ${open ? styles.open : undefined}`}>
+		<div className={`${styles.wrapper} ${open ? styles.open : undefined}`}>
 			<div
 				onClick={() => {
 					toggleOpen((prev) => !prev);
 				}}>
-				{icons[icon]}
+				{icon}
 			</div>
 			{open &&
-				Object.entries(icons).map(([elName, element]) => {
-					return icon !== elName ? (
+				Object.entries(icons).map(([number, element]) => {
+					return icon !== element ? (
 						<div
+							key={number}
 							onClick={() => {
-								setIcon(elName);
 								toggleOpen((p) => !p);
+								setFrameNumber(Number(number))
 							}}>
 							{element}
 						</div>

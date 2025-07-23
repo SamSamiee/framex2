@@ -11,6 +11,8 @@ function PictureFrame({ frameNumber }) {
 		frameNumber = 4;
 	}
 
+	console.log('PictureFrame rendered...')
+
 	const cardStyle = `c${frameNumber}`;
 	const arr = range(frameNumber);
 
@@ -19,7 +21,6 @@ function PictureFrame({ frameNumber }) {
 			<div className={`${styles.card} ${styles[cardStyle]}`}>
 				{arr.map((item) => {
 					const style = { gridArea: `item${item + 1}` };
-					console.log(style);
 					return <UploadSlot key={item} style={style} />;
 				})}
 			</div>

@@ -13,6 +13,9 @@ function UploadSlot({ style }) {
 			reader.readAsDataURL(file);
 		}
 	}
+
+	console.log("UploadSlot rendered...");
+
 	return (
 		<>
 			<input
