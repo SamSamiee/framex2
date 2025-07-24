@@ -8,7 +8,6 @@ import Timer from "../Timer";
 function Cart({ children, slots }) {
 	const [frameNumber, setFrameNumber] = React.useState(slots);
 
-	console.log("Cart rendered...");
 
 	const size = "2em";
 	return (

@@ -14,7 +14,7 @@ function UploadSlot({ style }) {
 		}
 	}
 
-	console.log("UploadSlot rendered...");
+	
 
 	return (
 		<>

@@ -4,7 +4,6 @@ import styles from "./styles.module.css";
 
 function DynamicGrid({ size, frameNumber, setFrameNumber }) {
 	const [open, toggleOpen] = React.useState(false);
-	console.log("DynamicGrid rendered...");
 
 	const icons = {
 		4: <Grid size={size} />,
@@ -29,7 +28,7 @@ function DynamicGrid({ size, frameNumber, setFrameNumber }) {
 							key={number}
 							onClick={() => {
 								toggleOpen((p) => !p);
-								setFrameNumber(Number(number))
+								setFrameNumber(Number(number));
 							}}>
 							{element}
 						</div>

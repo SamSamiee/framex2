@@ -11,7 +11,6 @@ function PictureFrame({ frameNumber }) {
 		frameNumber = 4;
 	}
 
-	console.log('PictureFrame rendered...')
 
 	const cardStyle = `c${frameNumber}`;
 	const arr = range(frameNumber);
