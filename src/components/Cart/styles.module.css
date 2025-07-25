@@ -1,8 +1,11 @@
 .cart {
+	width: 80vw;
+	max-width: 1000px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 	justify-content: center;
+	align-items: center;
 }
 
 .controller {
@@ -34,6 +37,7 @@
 }
 
 .p {
+	width: 100%;
 	font-size: 1.6rem;
 }
 

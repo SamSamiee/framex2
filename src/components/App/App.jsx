@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./styles.module.css";
 import Cart from "../Cart";
 import LoginPage from "../LoginPage";
-import InsertCard from '../InsertCard'
+import InsertCard from "../InsertCard";
 import Header from "../Header";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { db } from "../../config/firebase-config";
@@ -13,6 +13,7 @@ function App() {
 	const currentUser = React.useContext(AuthContext);
 	const [cards, setCards] = React.useState([]);
 	const cardsCollectionRef = collection(db, "cards");
+	const [modalOpen, setModalOpen] = React.useState(false);
 
 	React.useEffect(() => {
 		async function getCards() {
@@ -27,8 +28,22 @@ function App() {
 				console.error(err);
 			}
 		}
-
 		getCards();
+	}, []);
+
+	React.useEffect(() => {
+		function handleEsc(e) {
+			console.log("hi");
+			if (e.key === "Escape") {
+				setModalOpen(false);
+			}
+		}
+
+		window.addEventListener("keydown", (e) => {
+			handleEsc(e);
+		});
+
+		return window.removeEventListener("keydown", handleEsc);
 	}, []);
 
 	function updateCardSchedule(id, newSchedule) {
@@ -39,12 +54,6 @@ function App() {
 		);
 	}
 
-	return (
-		<Modal>
-		<InsertCard />
-		</Modal>
-	);
-
 	if (!currentUser) {
 		return <LoginPage />;
 	} else {
@@ -52,7 +61,12 @@ function App() {
 			<>
 				<div className={styles.wrapper}>
 					<Header />
-					<button>+</button>
+					<button onClick={() => setModalOpen(true)}>+</button>
+					{modalOpen && (
+						<Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
+							<InsertCard />
+						</Modal>
+					)}
 					{cards.map(({ description, scheduleDetail, images, id }) => {
 						return (
 							<Cart
