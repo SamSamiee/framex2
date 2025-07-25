@@ -12,7 +12,7 @@ function Timer({ size, scheduleDetail, onScheduleChange, id }) {
 			<Popover.Trigger asChild>
 				<Clock
 					color={
-						scheduleDetail.time && scheduleDetail.date ? "blue" : undefined
+						scheduleDetail?.time && scheduleDetail?.date ? "blue" : undefined
 					}
 					size={size}
 				/>

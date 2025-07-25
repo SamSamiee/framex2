@@ -1,7 +1,13 @@
 /*
   Josh's Custom CSS Reset
   https://www.joshwcomeau.com/css/custom-css-reset/
-*/
+  */
+  
+:root{
+  --maximum-change-width: 1000px;
+  --maximum-card-width: 400px;
+}
+
 *,
 *::before,
 *::after {

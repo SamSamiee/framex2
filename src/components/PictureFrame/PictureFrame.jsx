@@ -11,18 +11,15 @@ function PictureFrame({ frameNumber }) {
 		frameNumber = 4;
 	}
 
-
 	const cardStyle = `c${frameNumber}`;
 	const arr = range(frameNumber);
 
 	return (
-		<div className={styles.wrapper}>
-			<div className={`${styles.card} ${styles[cardStyle]}`}>
-				{arr.map((item) => {
-					const style = { gridArea: `item${item + 1}` };
-					return <UploadSlot key={item} style={style} />;
-				})}
-			</div>
+		<div className={`${styles.card} ${styles[cardStyle]}`}>
+			{arr.map((item) => {
+				const style = { gridArea: `item${item + 1}` };
+				return <UploadSlot key={item} style={style} />;
+			})}
 		</div>
 	);
 }

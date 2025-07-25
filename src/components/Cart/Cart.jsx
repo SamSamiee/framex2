@@ -1,5 +1,5 @@
 import React from "react";
-import { Trash, Clock, Twitter } from "react-feather";
+import { Trash, Twitter } from "react-feather";
 import styles from "./styles.module.css";
 import PictureFrame from "../PictureFrame";
 import DynamicGrid from "../DynamicGrid";

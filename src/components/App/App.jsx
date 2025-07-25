@@ -2,10 +2,12 @@ import React from "react";
 import styles from "./styles.module.css";
 import Cart from "../Cart";
 import LoginPage from "../LoginPage";
+import InsertCard from '../InsertCard'
 import Header from "../Header";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { db } from "../../config/firebase-config";
 import { getDocs, collection } from "firebase/firestore";
+import Modal from "../Modal";
 
 function App() {
 	const currentUser = React.useContext(AuthContext);
@@ -37,6 +39,12 @@ function App() {
 		);
 	}
 
+	return (
+		<Modal>
+		<InsertCard />
+		</Modal>
+	);
+
 	if (!currentUser) {
 		return <LoginPage />;
 	} else {
@@ -44,6 +52,7 @@ function App() {
 			<>
 				<div className={styles.wrapper}>
 					<Header />
+					<button>+</button>
 					{cards.map(({ description, scheduleDetail, images, id }) => {
 						return (
 							<Cart
