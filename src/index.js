@@ -4,12 +4,15 @@ import App from "./components/App";
 import "./reset.css";
 import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./Contexts/AuthContext";
+import { TimerProvider } from "./Contexts/TimerProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<AuthProvider>
-			<App />
+			<TimerProvider>
+				<App />
+			</TimerProvider>
 		</AuthProvider>
 	</React.StrictMode>
 );

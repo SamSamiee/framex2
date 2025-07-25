@@ -5,9 +5,8 @@ import PictureFrame from "../PictureFrame";
 import DynamicGrid from "../DynamicGrid";
 import Timer from "../Timer";
 
-function Cart({ children, slots }) {
+function Cart({ children, slots, onScheduleChange, scheduleDetail, id }) {
 	const [frameNumber, setFrameNumber] = React.useState(slots);
-
 
 	const size = "2em";
 	return (
@@ -22,8 +21,9 @@ function Cart({ children, slots }) {
 					<Trash size={size} />
 					<Timer
 						size={size}
-						frameNumber={frameNumber}
-						setFrameNumber={setFrameNumber}
+						onScheduleChange={onScheduleChange}
+						scheduleDetail={scheduleDetail}
+						id={id}
 					/>
 					<DynamicGrid
 						size={size}

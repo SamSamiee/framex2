@@ -1,7 +1,8 @@
 import React from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
-import { useAuth } from "../../Contexts/AuthContext";
+import { AuthContext } from "../../Contexts/AuthContext";
+import styles from "./styles.module.css";
 
 function Header() {
 	async function logout() {
@@ -12,13 +13,15 @@ function Header() {
 		}
 	}
 
-	const currentUser = useAuth()?.currentUser;
-
+	const currentUser = React.useContext(AuthContext);
+	console.log(currentUser.photoURL)
 	return (
-		<navbar>
-			<image src={currentUser?.photoURL} />
+		<nav>
+			<div className={styles.profilePicture}>
+				<img src={currentUser?.photoURL} alt="user's profile picture" />
+			</div>
 			<button onClick={logout}>log out</button>
-		</navbar>
+		</nav>
 	);
 }
 
