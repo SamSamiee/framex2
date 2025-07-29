@@ -1,0 +1,57 @@
+.wrapper {
+	/* background-color: aquamarine; */
+	height: 100%;
+	/* width: 25vw; */
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	padding: 30px;
+	padding-right: 0;
+}
+
+.plate {
+	height: 100%;
+	/* background-color: rgb(16, 203, 19); */
+	min-width: 10vw;
+	padding: 15px;
+	border-radius: 15px;
+	box-shadow: 0 0 30px 1px rgba(0, 0, 0, 0.461);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	overflow-x: scroll;
+	gap: 10px;
+}
+
+.slot {
+	width: 15vw;
+	aspect-ratio: 16/9;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+  border: none;
+}
+
+.slot img {
+	background-color: rgb(245, 245, 245);
+	width: 100%;
+	aspect-ratio: 16/9;
+	border-radius: 15px;
+	border: none;
+	object-fit: contain;
+}
+
+.delete {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	border: none;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.518);
+}

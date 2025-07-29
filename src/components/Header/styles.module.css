@@ -1,4 +1,12 @@
 .profilePicture {
-	width: fit-content;
 	border-radius: 100px;
+	width: 90px;
+	
+	height: 90px;
+	overflow: hidden;
+}
+
+.expandWrapper{
+
+	
 }

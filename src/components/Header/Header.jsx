@@ -4,7 +4,8 @@ import { auth } from "../../config/firebase-config";
 import { AuthContext } from "../../Contexts/AuthContext";
 import styles from "./styles.module.css";
 
-function Header() {
+function Header({ children }) {
+	const [isOpen, setIsOpen] = React.useState(true);
 	async function logout() {
 		try {
 			await signOut(auth);
@@ -14,13 +15,21 @@ function Header() {
 	}
 
 	const currentUser = React.useContext(AuthContext);
-	console.log(currentUser.photoURL)
 	return (
 		<nav>
-			<div className={styles.profilePicture}>
+			<button
+				className={styles.profilePicture}
+				onClick={() => {
+					setIsOpen((c) => !c);
+				}}>
 				<img src={currentUser?.photoURL} alt="user's profile picture" />
-			</div>
-			<button onClick={logout}>log out</button>
+			</button>
+			{isOpen && (
+				<div className={styles.expandWrapper}>
+					<button onClick={logout}>log out</button>
+					{children}
+				</div>
+			)}
 		</nav>
 	);
 }

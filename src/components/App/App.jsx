@@ -8,14 +8,43 @@ import { AuthContext } from "../../Contexts/AuthContext";
 import { db } from "../../config/firebase-config";
 import { getDocs, collection } from "firebase/firestore";
 import Modal from "../Modal";
+import Lightbox from "../Lightbox";
+import { storage } from "../../config/firebase-config";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
 
 function App() {
 	const currentUser = React.useContext(AuthContext);
 	const [cards, setCards] = React.useState([]);
 	const cardsCollectionRef = collection(db, "cards");
-	const [modalOpen, setModalOpen] = React.useState(false);
+	const allimagesRef = collection(db, "allimages");
+	const [imageDB, setImageDB] = React.useState([]);
+	const [imageList, setImageList] = React.useState([]);
+
+	// ----------------
+
+	function fetchImages() {
+		setImageList([]);
+		const folderRef = ref(
+			storage,
+			`images/${currentUser.uid}/${currentUser.displayName}/`
+		);
+		listAll(folderRef).then((response) => {
+			response.items.forEach((i) => {
+				getDownloadURL(i).then((url) => {
+					setImageList((prev) => [...prev, url]);
+				});
+			});
+		});
+	}
 
 	React.useEffect(() => {
+		if (currentUser) fetchImages();
+	}, [currentUser]); /*eslint-disable-line */
+
+	// ----------------
+
+	React.useEffect(() => {
+		console.log(currentUser);
 		async function getCards() {
 			try {
 				const data = await getDocs(cardsCollectionRef);
@@ -29,22 +58,22 @@ function App() {
 			}
 		}
 		getCards();
-	}, []);
+	}, []); /*eslint-disable-line*/
 
 	React.useEffect(() => {
-		function handleEsc(e) {
-			console.log("hi");
-			if (e.key === "Escape") {
-				setModalOpen(false);
+		async function getImages() {
+			try {
+				const data = (await getDocs(allimagesRef)).docs.map((doc) => ({
+					...doc.data(),
+					id: doc.id,
+				}));
+				setImageDB(data);
+			} catch (err) {
+				console.error(err);
 			}
 		}
-
-		window.addEventListener("keydown", (e) => {
-			handleEsc(e);
-		});
-
-		return window.removeEventListener("keydown", handleEsc);
-	}, []);
+		getImages();
+	}, []); /*eslint-disable-line*/
 
 	function updateCardSchedule(id, newSchedule) {
 		setCards((prevCards) =>
@@ -61,23 +90,28 @@ function App() {
 			<>
 				<div className={styles.wrapper}>
 					<Header />
-					<button onClick={() => setModalOpen(true)}>+</button>
-					{modalOpen && (
-						<Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-							<InsertCard />
-						</Modal>
-					)}
-					{cards.map(({ description, scheduleDetail, images, id }) => {
-						return (
-							<Cart
-								id={id}
-								slots={images.length}
-								onScheduleChange={updateCardSchedule}
-								scheduleDetail={scheduleDetail}>
-								{description}
-							</Cart>
-						);
-					})}
+					<Modal>
+						<InsertCard />
+					</Modal>
+					<div className={styles.Body}>
+						{cards.map(({ description, scheduleDetail, images, id }) => {
+							return (
+								<Cart
+									id={id}
+									slots={images.length}
+									onScheduleChange={updateCardSchedule}
+									scheduleDetail={scheduleDetail}>
+									{description}
+								</Cart>
+							);
+						})}
+						<Lightbox
+							imageList={imageList}
+							setImageList={setImageList}
+							imageDB={imageDB}
+							setImageDB={setImageDB}
+						/>
+					</div>
 				</div>
 			</>
 		);

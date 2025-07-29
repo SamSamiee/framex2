@@ -1,25 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Popover } from "radix-ui";
 import { Clock } from "react-feather";
+import styles from "./styles.module.css";
 
 function Timer({ size, scheduleDetail, onScheduleChange, id }) {
 	const [formData, setFormData] = React.useState(
 		scheduleDetail || { time: "", date: "" }
 	);
+	const [timerOpen, setTimerOpen] = React.useState(false);
+	const clockRef = React.useRef(null);
+	const formRef = React.useRef(null);
+
+	React.useEffect(() => {
+		function handleClick(e) {
+			if (
+				formRef?.current?.contains(e?.target) ||
+				clockRef?.current?.contains(e?.target)
+			) {
+				return;
+			}
+			setTimerOpen(false);
+		}
+
+		window.addEventListener("click", handleClick);
+
+		return () => window.removeEventListener("click", handleClick);
+	}, []);
 
 	return (
-		<Popover.Root>
-			<Popover.Trigger asChild>
+		<div className={styles.wrapper}>
+			<button
+				onClick={() => setTimerOpen((c) => !c)}
+				style={{ backgroundColor: "transparent", border: "none" }}>
 				<Clock
+					ref={clockRef}
 					color={
 						scheduleDetail?.time && scheduleDetail?.date ? "blue" : undefined
 					}
 					size={size}
 				/>
-			</Popover.Trigger>
-			{/* <Popover.Portal> */}
-			<Popover.Content>
+			</button>
+			{timerOpen && (
 				<form
+					ref={formRef}
+					className={styles.Form}
 					id="schedule"
 					onSubmit={(e) => {
 						e.preventDefault();
@@ -49,21 +73,20 @@ function Timer({ size, scheduleDetail, onScheduleChange, id }) {
 							}
 						/>
 					</label>
-					<button type="submit">Set</button>
-					<button
-						type="reset"
-						onClick={() => {
-							onScheduleChange(id, { time: "", date: "" });
-							setFormData({ date: "", time: "" });
-						}}>
-						Reset
-					</button>
+					<div className={styles.Buttons}>
+						<button type="submit">Set</button>
+						<button
+							type="reset"
+							onClick={() => {
+								onScheduleChange(id, { time: "", date: "" });
+								setFormData({ date: "", time: "" });
+							}}>
+							Reset
+						</button>
+					</div>
 				</form>
-				<Popover.Close />
-				{/* <Popover.Arrow /> */}
-			</Popover.Content>
-			{/* </Popover.Portal> */}
-		</Popover.Root>
+			)}
+		</div>
 	);
 }
 
