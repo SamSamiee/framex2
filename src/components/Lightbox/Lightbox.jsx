@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./styles.module.css";
 import { storage, db } from "../../config/firebase-config";
+import { Disc, Plus } from "react-feather";
 import {
 	ref,
 	uploadBytes,
@@ -14,6 +15,7 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 	const currentUser = React.useContext(AuthContext);
 	const inputRef = React.useRef(null);
 	const allimagesRef = collection(db, "allimages");
+	const [isOpen, setIsOpen] = React.useState(true);
 	// upload images on the storage
 	async function addFiles(file) {
 		const folderRef = ref(
@@ -23,15 +25,9 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 		try {
 			await uploadBytes(folderRef, file);
 			const url = await getDownloadURL(folderRef);
-			await addDoc(allimagesRef, {
-				url: url,
-				lightbox: true,
-				userId: currentUser.uid,
-			});
-			setImageDB((prev) => [
-				...prev,
-				{ url: url, lightbox: true, userId: currentUser.uid },
-			]);
+			const newObj = { url, lightbox: true, userId: currentUser.uid };
+			await addDoc(allimagesRef, newObj);
+			setImageDB((prev) => [...prev, newObj]);
 			return url;
 		} catch (err) {
 			console.error(err);
@@ -59,7 +55,16 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 	}
 
 	return (
-		<div className={styles.wrapper}>
+		<div
+			className={`${styles.wrapper} ${isOpen ? styles.open : undefined}`}>
+			<div className={styles.handle}>
+				<button
+					onClick={() => {
+						setIsOpen((p) => !p);
+					}}>
+					<Disc />
+				</button>
+			</div>
 			<div className={styles.plate}>
 				<input
 					style={{ display: "none" }}
@@ -75,27 +80,50 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 						e.target.value = null; // Reset input so same file can be uploaded again
 					}}
 				/>
-				<button onClick={() => inputRef?.current?.click()}>add</button>
-				{imageDB?.map(({ url, id, lightbox }) => {
-					return (
-						lightbox && (
-							<div className={styles.slot}>
-								{/* eslint-disable-next-line */}
-								<img src={url} />
-								<button
-									className={styles.delete}
-									onClick={async () => {
-										await deleteImage(url, id);
-										setImageDB((prev) =>
-											prev.filter((item) => item.url !== url)
-										);
-									}}>
-									-
-								</button>
-							</div>
-						)
-					);
-				})}
+				<button
+					className={styles.add}
+					onClick={() => inputRef?.current?.click()}>
+					<Plus />
+				</button>
+				{imageDB.length === 0 ? (
+					<div className={styles.PWrapper}>
+						<p className={styles.description}>
+							<span style={{ opacity: "50%" }}>
+								Start adding images by clicking on the{" "}
+							</span>
+							<span
+								style={{
+									backgroundColor: "black",
+									color: "white",
+									padding: "1px 5px",
+									borderRadius: "5px",
+								}}>
+								plus icon
+							</span>
+						</p>
+					</div>
+				) : (
+					imageDB?.map(({ url, id, lightbox }) => {
+						return (
+							lightbox && (
+								<div className={styles.slot}>
+									{/* eslint-disable-next-line */}
+									<img src={url} />
+									<button
+										className={styles.delete}
+										onClick={async () => {
+											await deleteImage(url, id);
+											setImageDB((prev) =>
+												prev.filter((item) => item.url !== url)
+											);
+										}}>
+										-
+									</button>
+								</div>
+							)
+						);
+					})
+				)}
 			</div>
 		</div>
 	);

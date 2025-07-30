@@ -1,18 +1,76 @@
+:root {
+	--plate-back-color: rgb(233, 233, 233);
+}
+
 .wrapper {
-	/* background-color: aquamarine; */
 	height: 100%;
-	/* width: 25vw; */
+	width: 18vw;
 	position: fixed;
 	right: 0;
 	bottom: 0;
 	padding: 30px;
 	padding-right: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 100ms ease-out;
+}
+
+.open {
+	transform: translateX(calc(18vw - 60px));
+}
+
+.handle {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 40px;
+	height: 50px;
+	border-radius: 100% 0 0 100%;
+	background-color: var(--plate-back-color);
+	box-shadow: -18px 0 20px 1px rgba(0, 0, 0, 0.214);
+}
+
+.handle button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 20px;
+	min-height: 45px;
+	background-color: transparent;
+	border: none;
+}
+
+.add {
+	border: none;
+	background-color: black;
+	color: white;
+	width: 50%;
+	max-width: 150px;
+	height: 1.6em;
+	border-radius: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.PWrapper {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.description {
+	font-size: 0.9rem;
 }
 
 .plate {
 	height: 100%;
-	/* background-color: rgb(16, 203, 19); */
-	min-width: 10vw;
+	background-color: var(--plate-back-color);
+	width: 100%;
 	padding: 15px;
 	border-radius: 15px;
 	box-shadow: 0 0 30px 1px rgba(0, 0, 0, 0.461);
@@ -20,19 +78,20 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	overflow-x: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
 	gap: 10px;
+	transition: all ease 1s;
 }
 
 .slot {
-	width: 15vw;
 	aspect-ratio: 16/9;
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-  border: none;
+	border: none;
 }
 
 .slot img {
@@ -54,4 +113,30 @@
 	right: 5px;
 	color: white;
 	background-color: rgba(0, 0, 0, 0.518);
+}
+
+@media (max-width: 1000px) {
+	.wrapper {
+		/* background-color: red; */
+		width: 90vw;
+		bottom: 0;
+		right: 50%;
+		transform: translateX(50%);
+		padding: 10px;
+		padding-bottom: 0;
+		flex-direction: column;
+		transition: 300ms;
+	}
+
+	.handle {
+		transform: rotate(90deg) translateX(10px);
+	}
+	.open {
+		transform: translateY(calc(100% - 60px)) translateX(50%);
+	}
+
+	.description {
+		font-size: 0.9rem;
+		padding: 39px;
+	}
 }
