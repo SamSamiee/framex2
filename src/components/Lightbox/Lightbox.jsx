@@ -1,4 +1,5 @@
 import React from "react";
+import Thumbnail from "../Thumbnail/Thumbnail";
 import styles from "./styles.module.css";
 import { storage, db } from "../../config/firebase-config";
 import { Disc, Plus } from "react-feather";
@@ -11,23 +12,47 @@ import {
 import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 import { AuthContext } from "../../Contexts/AuthContext";
 
-function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
+function Lightbox({ imageDB, setImageDB }) {
 	const currentUser = React.useContext(AuthContext);
 	const inputRef = React.useRef(null);
 	const allimagesRef = collection(db, "allimages");
 	const [isOpen, setIsOpen] = React.useState(true);
+	const [selectedThumbnails, setSelectedThumbnails] = React.useState([])
 	// upload images on the storage
 	async function addFiles(file) {
+		const tempId = file.name + Date.now();
+		const tempObj = {
+			url: null,
+			id: tempId,
+			lightbox: true,
+			userId: currentUser.id,
+			show: true,
+		};
+		setImageDB((p) => [...p, tempObj]);
+
 		const folderRef = ref(
 			storage,
-			`images/${currentUser.uid}/${currentUser.displayName}/${file.name}`
+			`images/${currentUser.uid}/${currentUser.displayName.replace(
+				/ /g,
+				"-"
+			)}/${file.name}`
 		);
 		try {
 			await uploadBytes(folderRef, file);
 			const url = await getDownloadURL(folderRef);
-			const newObj = { url, lightbox: true, userId: currentUser.uid };
-			await addDoc(allimagesRef, newObj);
-			setImageDB((prev) => [...prev, newObj]);
+			const newObj = {
+				url,
+				lightbox: true,
+				userId: currentUser.uid,
+				show: true,
+			};
+			const docRef = await addDoc(allimagesRef, newObj);
+			setImageDB((prevArr) => {
+				return prevArr.map((item) => {
+					return item.id === tempId ? { ...newObj, id: docRef.id } : item;
+				});
+			});
+
 			return url;
 		} catch (err) {
 			console.error(err);
@@ -44,19 +69,18 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 	}
 	async function deleteImage(url, id) {
 		try {
+			const imageDoc = doc(db, "allimages", id);
+			await deleteDoc(imageDoc);
 			const filePath = getStoragePathFromUrl(url);
 			const fileRef = ref(storage, filePath);
 			await deleteObject(fileRef);
-			const imageDoc = doc(db, "allimages", id);
-			await deleteDoc(imageDoc);
 		} catch (error) {
 			console.error("Error deleting file:", error);
 		}
 	}
 
 	return (
-		<div
-			className={`${styles.wrapper} ${isOpen ? styles.open : undefined}`}>
+		<div className={`${styles.wrapper} ${isOpen ? styles.open : undefined}`}>
 			<div className={styles.handle}>
 				<button
 					onClick={() => {
@@ -70,13 +94,14 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 					style={{ display: "none" }}
 					ref={inputRef}
 					type="file"
-					accept="image/*"
+					accepts="image/*"
 					multiple
 					onChange={async (e) => {
 						const files = Array.from(e.target.files);
 						if (!files.length) return;
-						const urls = await Promise.all(files.map(addFiles));
-						setImageList((prev) => [...prev, ...urls.filter(Boolean)]);
+						files.forEach((file) => {
+							addFiles(file);
+						});
 						e.target.value = null; // Reset input so same file can be uploaded again
 					}}
 				/>
@@ -85,7 +110,7 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 					onClick={() => inputRef?.current?.click()}>
 					<Plus />
 				</button>
-				{imageDB.length === 0 ? (
+				{imageDB?.length === 0 ? (
 					<div className={styles.PWrapper}>
 						<p className={styles.description}>
 							<span style={{ opacity: "50%" }}>
@@ -103,23 +128,23 @@ function Lightbox({ imageList, setImageList, imageDB, setImageDB }) {
 						</p>
 					</div>
 				) : (
-					imageDB?.map(({ url, id, lightbox }) => {
+					imageDB?.map(({ url, id, lightbox, show }) => {
 						return (
-							lightbox && (
-								<div className={styles.slot}>
-									{/* eslint-disable-next-line */}
-									<img src={url} />
-									<button
-										className={styles.delete}
-										onClick={async () => {
-											await deleteImage(url, id);
-											setImageDB((prev) =>
-												prev.filter((item) => item.url !== url)
-											);
-										}}>
-										-
-									</button>
-								</div>
+							lightbox &&
+							show && (
+								<Thumbnail
+									selectedThumbnails={selectedThumbnails}
+									setSelectedThumbnails={setSelectedThumbnails}
+									key={url}
+									url={url}
+									deleteFunction={async (e) => {
+										e.stopPropagation();
+										await deleteImage(url, id);
+										setImageDB((prev) =>
+											prev.filter((item) => item.url !== url)
+										);
+									}}
+								/>
 							)
 						);
 					})

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./style.module.css";
 
-function UploadSlot({ style }) {
+function UploadSlot({ style, url = undefined }) {
 	const inputRef = React.useRef();
 	const [image, setImage] = React.useState(null);
 
@@ -13,8 +13,6 @@ function UploadSlot({ style }) {
 			reader.readAsDataURL(file);
 		}
 	}
-
-	
 
 	return (
 		<>
@@ -28,7 +26,7 @@ function UploadSlot({ style }) {
 			<button
 				style={{
 					...style,
-					backgroundImage: image ? `url(${image})` : undefined,
+					backgroundImage: image ? `url(${image})` : `url(${url})`,
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 				}}

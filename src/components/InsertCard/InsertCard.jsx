@@ -6,8 +6,8 @@ import DynamicGrid from "../DynamicGrid";
 import Timer from "../Timer";
 import { useMediaQuery } from "react-responsive";
 
-function InsertCard({ onScheduleChange, scheduleDetail }) {
-	const [frameNumber, setFrameNumber] = React.useState(4);
+function InsertCard({ frames=4, onScheduleChange, scheduleDetail }) {
+	const [frameNumber, setFrameNumber] = React.useState(frames);
 	const isMobile = useMediaQuery({ maxWidth: 1000 });
 
 	const size = "2em";

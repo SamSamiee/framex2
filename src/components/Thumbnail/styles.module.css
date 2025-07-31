@@ -1,0 +1,67 @@
+.slot {
+	aspect-ratio: 16/9;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	border: none;
+	overflow: hidden;
+}
+
+.selected {
+	border: 3px solid black;
+}
+
+.slot img {
+	background-color: rgb(245, 245, 245);
+	width: 100%;
+	aspect-ratio: 16/9;
+	border-radius: 15px;
+	border: none;
+	object-fit: contain;
+}
+
+.delete {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	border: none;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.518);
+}
+
+.skeleton {
+	aspect-ratio: 16/9;
+	width: 100%;
+	border-radius: 10px;
+	background-color: #e0e0e0;
+	position: relative;
+	overflow: hidden;
+}
+
+.skeleton::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -100%;
+	height: 100%;
+	width: 150px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.4),
+		transparent
+	);
+	animation: shimmer 1.9s  infinite;
+}
+
+@keyframes shimmer {
+	100% {
+		transform: translateX(290%);
+	}
+}

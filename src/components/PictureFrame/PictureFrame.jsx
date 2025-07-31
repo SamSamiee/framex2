@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import UploadSlot from "../UploadSlot/UploadSlot";
 import { range } from "../../utils";
 
+// we don't need a frame number here, we need a list of urls like: [url, url, url,...] but that should not be set here it should instead be set in InsertCard
 function PictureFrame({ frameNumber }) {
 	if (frameNumber === undefined || frameNumber < 1) {
 		frameNumber = 1;

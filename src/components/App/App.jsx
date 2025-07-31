@@ -6,7 +6,7 @@ import InsertCard from "../InsertCard";
 import Header from "../Header";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { db } from "../../config/firebase-config";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, query, where } from "firebase/firestore";
 import Modal from "../Modal";
 import Lightbox from "../Lightbox";
 import { storage } from "../../config/firebase-config";
@@ -44,10 +44,13 @@ function App() {
 	// ----------------
 
 	React.useEffect(() => {
-		console.log(currentUser);
 		async function getCards() {
 			try {
-				const data = await getDocs(cardsCollectionRef);
+				const q = query(
+					cardsCollectionRef,
+					where("userId", "==", currentUser?.uid)
+				);
+				const data = await getDocs(q);
 				const filteredData = data.docs.map((doc) => ({
 					...doc.data(),
 					id: doc.id,
@@ -63,7 +66,8 @@ function App() {
 	React.useEffect(() => {
 		async function getImages() {
 			try {
-				const data = (await getDocs(allimagesRef)).docs.map((doc) => ({
+				const q = query(allimagesRef, where("userId", "==", currentUser?.uid));
+				const data = (await getDocs(q)).docs.map((doc) => ({
 					...doc.data(),
 					id: doc.id,
 				}));

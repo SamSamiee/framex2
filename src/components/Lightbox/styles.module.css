@@ -84,36 +84,6 @@
 	transition: all ease 1s;
 }
 
-.slot {
-	aspect-ratio: 16/9;
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	border: none;
-}
-
-.slot img {
-	background-color: rgb(245, 245, 245);
-	width: 100%;
-	aspect-ratio: 16/9;
-	border-radius: 15px;
-	border: none;
-	object-fit: contain;
-}
-
-.delete {
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 100%;
-	border: none;
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	color: white;
-	background-color: rgba(0, 0, 0, 0.518);
-}
 
 @media (max-width: 1000px) {
 	.wrapper {
