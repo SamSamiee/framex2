@@ -1,83 +1,15 @@
 import React from "react";
 import Thumbnail from "../Thumbnail/Thumbnail";
 import styles from "./styles.module.css";
-import { storage, db } from "../../config/firebase-config";
 import { Disc, Plus } from "react-feather";
-import {
-	ref,
-	uploadBytes,
-	getDownloadURL,
-	deleteObject,
-} from "firebase/storage";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
-import { AuthContext } from "../../Contexts/AuthContext";
+import { FileContext } from "../../Contexts/FileProvider";
 
-function Lightbox({ imageDB, setImageDB }) {
-	const currentUser = React.useContext(AuthContext);
+function Lightbox() {
 	const inputRef = React.useRef(null);
-	const allimagesRef = collection(db, "allimages");
 	const [isOpen, setIsOpen] = React.useState(true);
-	const [selectedThumbnails, setSelectedThumbnails] = React.useState([])
-	// upload images on the storage
-	async function addFiles(file) {
-		const tempId = file.name + Date.now();
-		const tempObj = {
-			url: null,
-			id: tempId,
-			lightbox: true,
-			userId: currentUser.id,
-			show: true,
-		};
-		setImageDB((p) => [...p, tempObj]);
-
-		const folderRef = ref(
-			storage,
-			`images/${currentUser.uid}/${currentUser.displayName.replace(
-				/ /g,
-				"-"
-			)}/${file.name}`
-		);
-		try {
-			await uploadBytes(folderRef, file);
-			const url = await getDownloadURL(folderRef);
-			const newObj = {
-				url,
-				lightbox: true,
-				userId: currentUser.uid,
-				show: true,
-			};
-			const docRef = await addDoc(allimagesRef, newObj);
-			setImageDB((prevArr) => {
-				return prevArr.map((item) => {
-					return item.id === tempId ? { ...newObj, id: docRef.id } : item;
-				});
-			});
-
-			return url;
-		} catch (err) {
-			console.error(err);
-		}
-	}
-
-	function getStoragePathFromUrl(url) {
-		const pathStart = url.indexOf("/o/") + 3;
-		const pathEnd = url.indexOf("?");
-
-		// Decode encoded path (e.g., %2F → /)
-		const fullPath = decodeURIComponent(url.substring(pathStart, pathEnd));
-		return fullPath;
-	}
-	async function deleteImage(url, id) {
-		try {
-			const imageDoc = doc(db, "allimages", id);
-			await deleteDoc(imageDoc);
-			const filePath = getStoragePathFromUrl(url);
-			const fileRef = ref(storage, filePath);
-			await deleteObject(fileRef);
-		} catch (error) {
-			console.error("Error deleting file:", error);
-		}
-	}
+	const [selectedThumbnails, setSelectedThumbnails] = React.useState([]);
+	const { setImageDB, addFiles, imageDB, deleteImage } =
+		React.useContext(FileContext);
 
 	return (
 		<div className={`${styles.wrapper} ${isOpen ? styles.open : undefined}`}>

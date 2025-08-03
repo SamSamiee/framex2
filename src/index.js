@@ -5,13 +5,15 @@ import "./reset.css";
 import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./Contexts/AuthContext";
 import { TimerProvider } from "./Contexts/TimerProvider";
-
+import { FileProvider } from "../src/Contexts/FileProvider";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<AuthProvider>
 			<TimerProvider>
-				<App />
+				<FileProvider>
+					<App />
+				</FileProvider>
 			</TimerProvider>
 		</AuthProvider>
 	</React.StrictMode>

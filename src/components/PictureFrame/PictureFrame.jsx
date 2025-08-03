@@ -3,8 +3,7 @@ import styles from "./styles.module.css";
 import UploadSlot from "../UploadSlot/UploadSlot";
 import { range } from "../../utils";
 
-// we don't need a frame number here, we need a list of urls like: [url, url, url,...] but that should not be set here it should instead be set in InsertCard
-function PictureFrame({ frameNumber }) {
+function PictureFrame({ filesArr, setFilesArr, frameNumber, urls, setUrls }) {
 	if (frameNumber === undefined || frameNumber < 1) {
 		frameNumber = 1;
 	}
@@ -13,13 +12,22 @@ function PictureFrame({ frameNumber }) {
 	}
 
 	const cardStyle = `c${frameNumber}`;
-	const arr = range(frameNumber);
 
 	return (
 		<div className={`${styles.card} ${styles[cardStyle]}`}>
-			{arr.map((item) => {
-				const style = { gridArea: `item${item + 1}` };
-				return <UploadSlot key={item} style={style} />;
+			{range(frameNumber).map((number) => {
+				const style = { gridArea: `item${number + 1}` };
+				return (
+					<UploadSlot
+						file={filesArr? filesArr[number] : undefined}
+						filesArr={filesArr}
+						setFilesArr={setFilesArr}
+						url={urls? urls[number] : undefined}
+						key={number}
+						style={style}
+						id={number}
+					/>
+				);
 			})}
 		</div>
 	);

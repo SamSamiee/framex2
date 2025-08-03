@@ -9,39 +9,15 @@ import { db } from "../../config/firebase-config";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import Modal from "../Modal";
 import Lightbox from "../Lightbox";
-import { storage } from "../../config/firebase-config";
-import { ref, listAll, getDownloadURL } from "firebase/storage";
+import { FileContext } from "../../Contexts/FileProvider";
 
 function App() {
 	const currentUser = React.useContext(AuthContext);
-	const [cards, setCards] = React.useState([]);
+	const { setImageDB, handleDeleteCard } = React.useContext(FileContext);
 	const cardsCollectionRef = collection(db, "cards");
 	const allimagesRef = collection(db, "allimages");
-	const [imageDB, setImageDB] = React.useState([]);
-	const [imageList, setImageList] = React.useState([]);
-
-	// ----------------
-
-	function fetchImages() {
-		setImageList([]);
-		const folderRef = ref(
-			storage,
-			`images/${currentUser.uid}/${currentUser.displayName}/`
-		);
-		listAll(folderRef).then((response) => {
-			response.items.forEach((i) => {
-				getDownloadURL(i).then((url) => {
-					setImageList((prev) => [...prev, url]);
-				});
-			});
-		});
-	}
-
-	React.useEffect(() => {
-		if (currentUser) fetchImages();
-	}, [currentUser]); /*eslint-disable-line */
-
-	// ----------------
+	const [cards, setCards] = React.useState([]);
+	const [modalOpen, setModalOpen] = React.useState(false);
 
 	React.useEffect(() => {
 		async function getCards() {
@@ -94,27 +70,25 @@ function App() {
 			<>
 				<div className={styles.wrapper}>
 					<Header />
-					<Modal>
-						<InsertCard />
+					<Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
+						<InsertCard modalOpen={modalOpen} setModalOpen={setModalOpen} />
 					</Modal>
 					<div className={styles.Body}>
-						{cards.map(({ description, scheduleDetail, images, id }) => {
+						{cards.map(({ description, scheduleDetail, urls, id }) => {
 							return (
 								<Cart
+									onDelete={()=>handleDeleteCard(id)}
+									key={id}
+									urls={urls}
 									id={id}
-									slots={images.length}
+									slots={urls?.length}
 									onScheduleChange={updateCardSchedule}
 									scheduleDetail={scheduleDetail}>
 									{description}
 								</Cart>
 							);
 						})}
-						<Lightbox
-							imageList={imageList}
-							setImageList={setImageList}
-							imageDB={imageDB}
-							setImageDB={setImageDB}
-						/>
+						<Lightbox />
 					</div>
 				</div>
 			</>

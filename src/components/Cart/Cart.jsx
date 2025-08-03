@@ -1,35 +1,22 @@
 import React from "react";
 import { Trash, Twitter } from "react-feather";
 import styles from "./styles.module.css";
-import PictureFrame from "../PictureFrame";
-import DynamicGrid from "../DynamicGrid";
-import Timer from "../Timer";
+import FourSquare from "../FourSquare";
 
-function Cart({ children, slots, onScheduleChange, scheduleDetail, id }) {
-	const [frameNumber, setFrameNumber] = React.useState(slots);
-
+function Cart({ urls, children, onScheduleChange, scheduleDetail, id }) {
 	const size = "2em";
 	return (
 		<div className={styles.cart}>
 			<p className={styles.p}>{children}</p>
-			<PictureFrame frameNumber={frameNumber} size={size} />
+			<FourSquare urls={urls} />
 			<div className={styles.controller}>
 				<button className={`${styles.Button} ${styles.twitter}`}>
 					<Twitter size={size} color="white" />
 				</button>
 				<div className={styles.adjust}>
+					<button>
 					<Trash size={size} />
-					<Timer
-						size={size}
-						onScheduleChange={onScheduleChange}
-						scheduleDetail={scheduleDetail}
-						id={id}
-					/>
-					<DynamicGrid
-						size={size}
-						frameNumber={frameNumber}
-						setFrameNumber={setFrameNumber}
-					/>
+					</button>
 				</div>
 			</div>
 		</div>

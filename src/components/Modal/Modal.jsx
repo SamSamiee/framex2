@@ -4,8 +4,7 @@ import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import { Plus } from "react-feather";
 
-function Modal({ children }) {
-	const [modalOpen, setModalOpen] = React.useState(false);
+function Modal({ children, modalOpen, setModalOpen }) {
 
 	React.useEffect(() => {
 		function handleEsc(e) {
