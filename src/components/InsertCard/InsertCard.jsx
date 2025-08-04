@@ -11,7 +11,9 @@ import { AuthContext } from "../../Contexts/AuthContext";
 function InsertCard({ frames = 4, onScheduleChange, scheduleDetail }) {
 	const [text, setText] = React.useState("");
 	const [frameNumber, setFrameNumber] = React.useState(frames);
-	const [urls, setUrls] = React.useState(Array(frames).fill(undefined));
+	const [urlsAndIds, setUrlsAndIds] = React.useState(
+		Array(frames).fill(undefined)
+	);
 	const currentUser = React.useContext(AuthContext);
 	const { addFiles, addCard } = React.useContext(FileContext);
 	const [filesArr, setFilesArr] = React.useState(Array(4).fill(undefined));
@@ -20,18 +22,18 @@ function InsertCard({ frames = 4, onScheduleChange, scheduleDetail }) {
 
 	async function handleUploadCart() {
 		const newFiles = [...filesArr].slice(0, frameNumber);
-		if (!(newFiles.filter((i) => i === undefined).length) && text.trim() === "") {
+		if (!newFiles.filter((i) => i === undefined).length && text.trim() === "") {
 			alert("Please either add a description or upload some photos");
 			return;
 		}
-		const fileURLs = await Promise.all(
+		const imagesData = await Promise.all(
 			newFiles.map((file) => addFiles(file, false))
 		);
-		setUrls(fileURLs);
+		setUrlsAndIds(imagesData);
 		try {
 			await addCard({
 				description: text,
-				urls: fileURLs,
+				imagesData,
 				scheduleDetail: scheduleDetail || "",
 				userId: currentUser?.uid,
 				dateCreated: new Date(),
@@ -54,21 +56,19 @@ function InsertCard({ frames = 4, onScheduleChange, scheduleDetail }) {
 				filesArr={filesArr}
 				setFilesArr={setFilesArr}
 				frameNumber={frameNumber}
-				urls={urls}
+				urlsAndIds={urlsAndIds}
 				size={size}
 			/>
 			<div className={styles.controller}>
 				<div className={styles.adjust}>
 					<Trash size={size} />
-					<Timer
+					{/* <Timer
 						size={size}
 						onScheduleChange={onScheduleChange}
 						scheduleDetail={scheduleDetail}
-					/>
+					/> */}
 					<DynamicGrid
 						size={size}
-						urls={urls}
-						setUrls={setUrls}
 						frameNumber={frameNumber}
 						setFrameNumber={setFrameNumber}
 					/>
@@ -91,8 +91,8 @@ function InsertCard({ frames = 4, onScheduleChange, scheduleDetail }) {
 				filesArr={filesArr}
 				setFilesArr={setFilesArr}
 				frameNumber={frameNumber}
-				urls={urls}
-				setUrls={setUrls}
+				urlsAndIds={urlsAndIds}
+				setUrlsAndIds={setUrlsAndIds}
 				size={size}
 			/>
 			<div className={styles.side}>
@@ -105,15 +105,13 @@ function InsertCard({ frames = 4, onScheduleChange, scheduleDetail }) {
 				<div className={styles.controller}>
 					<div className={styles.adjust}>
 						<Trash size={size} />
-						<Timer
+						{/* <Timer
 							size={size}
 							onScheduleChange={onScheduleChange}
 							scheduleDetail={scheduleDetail}
-						/>
+						/> */}
 						<DynamicGrid
 							size={size}
-							urls={urls}
-							setUrls={setUrls}
 							frameNumber={frameNumber}
 							setFrameNumber={setFrameNumber}
 						/>

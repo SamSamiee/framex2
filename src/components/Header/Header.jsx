@@ -10,7 +10,7 @@ function Header({ children }) {
 		try {
 			await signOut(auth);
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 

@@ -28,7 +28,6 @@ function UploadSlot({
 			const newArr = [...filesArr];
 			newArr.splice(id, 1, file);
 			setFilesArr(newArr);
-			console.log(newArr);
 		}
 	}
 

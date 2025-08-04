@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
+import React from 'react'
 import styles from "./styles.module.css";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import { Plus } from "react-feather";
 
 function Modal({ children, modalOpen, setModalOpen }) {
-
 	React.useEffect(() => {
 		function handleEsc(e) {
-			console.log("hi");
 			if (e.key === "Escape") {
 				setModalOpen(false);
 			}
@@ -25,15 +23,15 @@ function Modal({ children, modalOpen, setModalOpen }) {
 		? { position: "fixed", width: "100vw", height: "100vh" }
 		: undefined;
 	return (
-		<FocusLock>
-			<div className={styles.wrapper} style={modalOpenWrapperStyle}>
-				<button
-					style={modalOpenButtonStyle}
-					className={`${styles.add} ${modalOpen ? styles.open : undefined}`}
-					onClick={() => setModalOpen((c) => !c)}>
-					<Plus />
-				</button>
-				{modalOpen && (
+		<div className={styles.wrapper} style={modalOpenWrapperStyle}>
+			<button
+				style={modalOpenButtonStyle}
+				className={`${styles.add} ${modalOpen ? styles.open : undefined}`}
+				onClick={() => setModalOpen((c) => !c)}>
+				<Plus />
+			</button>
+			{modalOpen && (
+				<FocusLock>
 					<RemoveScroll>
 						<div
 							className={styles.backdrop}
@@ -45,9 +43,9 @@ function Modal({ children, modalOpen, setModalOpen }) {
 							</div>
 						</div>
 					</RemoveScroll>
-				)}
-			</div>
-		</FocusLock>
+				</FocusLock>
+			)}
+		</div>
 	);
 }
 

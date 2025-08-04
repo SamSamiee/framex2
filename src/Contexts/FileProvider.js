@@ -4,6 +4,7 @@ import {
 	collection,
 	deleteDoc,
 	doc,
+	getDoc,
 	updateDoc,
 } from "firebase/firestore";
 import { storage, db } from "../config/firebase-config";
@@ -21,12 +22,14 @@ export function FileProvider({ children }) {
 	const currentUser = React.useContext(AuthContext);
 	const [imageDB, setImageDB] = React.useState([]);
 
-	async function handleDeleteCard(cardId, imageId) {
+	async function handleDeleteCard(cardId, imageIds = []) {
 		try {
 			const cardDoc = doc(db, "cards", cardId);
 			await deleteDoc(cardDoc);
-			const imageDoc = doc(db, "allImages", imageId);
-			await updateDoc(imageDoc, { lightbox: true });
+			for (const imageId of imageIds) {
+				const imageDoc = doc(db, "allimages", imageId);
+				await updateDoc(imageDoc, { lightbox: true });
+			}
 		} catch (err) {
 			console.error(err);
 		}
@@ -69,7 +72,7 @@ export function FileProvider({ children }) {
 					return item.id === tempId ? { ...newObj, id: docRef.id } : item;
 				});
 			});
-			return url;
+			return { url, id: docRef.id };
 		} catch (err) {
 			console.error(err);
 		}

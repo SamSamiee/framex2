@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 import UploadSlot from "../UploadSlot/UploadSlot";
 import { range } from "../../utils";
 
-function PictureFrame({ filesArr, setFilesArr, frameNumber, urls, setUrls }) {
+function PictureFrame({ filesArr, setFilesArr, frameNumber, urlsAndIds }) {
 	if (frameNumber === undefined || frameNumber < 1) {
 		frameNumber = 1;
 	}
@@ -22,7 +22,7 @@ function PictureFrame({ filesArr, setFilesArr, frameNumber, urls, setUrls }) {
 						file={filesArr? filesArr[number] : undefined}
 						filesArr={filesArr}
 						setFilesArr={setFilesArr}
-						url={urls? urls[number] : undefined}
+						url={urlsAndIds? urlsAndIds[number]?.url : undefined}
 						key={number}
 						style={style}
 						id={number}

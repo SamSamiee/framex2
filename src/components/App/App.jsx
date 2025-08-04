@@ -74,12 +74,16 @@ function App() {
 						<InsertCard modalOpen={modalOpen} setModalOpen={setModalOpen} />
 					</Modal>
 					<div className={styles.Body}>
-						{cards.map(({ description, scheduleDetail, urls, id }) => {
+						{cards.map(({ description, scheduleDetail, id, imagesData }) => {
+							//imagesData=[{url,  id},  {url, id}]
+							const urls = imagesData?.map(({ url }) => url);
+							const imageIds = imagesData?.map(({ id }) => id);
 							return (
 								<Cart
-									onDelete={()=>handleDeleteCard(id)}
+									onDelete={() => handleDeleteCard(id)}
 									key={id}
 									urls={urls}
+									imageIds={imageIds}
 									id={id}
 									slots={urls?.length}
 									onScheduleChange={updateCardSchedule}

@@ -9,7 +9,7 @@ function LoginPage() {
 		try {
 			await signInWithPopup(auth, googleProvider);
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 

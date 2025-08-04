@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./styles.module.css";
 function FourSquare({ urls }) {
 	const cardStyle = `c${urls ? urls?.length : 1}`;
-	console.log(cardStyle);
 	return (
 		<div className={`${styles.card} ${styles[cardStyle]}`}>
 			{urls?.map((url, index) => {
