@@ -1,12 +1,19 @@
 import React from "react";
-import { Trash, Twitter } from "react-feather";
+import { Trash, Twitter, Edit } from "react-feather";
 import styles from "./styles.module.css";
 import FourSquare from "../FourSquare";
 import { FileContext } from "../../Contexts/FileProvider";
+import { InsertContext } from "../../Contexts/InsertProvider";
 
 function Cart({ urls, imageIds, children, id }) {
-	const { handleDeleteCard } = React.useContext(FileContext);
+	const { handleDeleteCard, handleEditCard } = React.useContext(FileContext);
+	const { setInsertDataForEdit } = React.useContext(InsertContext);
 	const size = "2em";
+
+	const handleEdit = () => {
+		handleEditCard(id, setInsertDataForEdit);
+	};
+
 	return (
 		<div className={styles.cart}>
 			<p className={styles.p}>{children}</p>
@@ -16,6 +23,16 @@ function Cart({ urls, imageIds, children, id }) {
 					<Twitter size={size} color="white" />
 				</button>
 				<div className={styles.adjust}>
+					<button
+						className={styles.edit}
+						type="button"
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							handleEdit();
+						}}>
+						<Edit size={size} />
+					</button>
 					<button
 						className={styles.delete}
 						type="button"

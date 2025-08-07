@@ -1,8 +1,9 @@
 import React from "react";
 import { Grid, Columns, Layout, Square } from "react-feather";
 import styles from "./styles.module.css";
-
-function DynamicGrid({ frameNumber, setFrameNumber, size }) {
+import { InsertContext } from "../../Contexts/InsertProvider";
+function DynamicGrid({ size }) {
+	const { frameNumber, setFrameNumber } = React.useContext(InsertContext);
 	const [open, toggleOpen] = React.useState(false);
 	const icons = {
 		4: <Grid size={size} />,

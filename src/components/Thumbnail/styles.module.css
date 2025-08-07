@@ -1,11 +1,19 @@
+
+.wrapper {
+	width: 100%;
+}
+
 .slot {
+	width: 100%;
+	/* min-width: 400px; */
+	background-color: red;
 	aspect-ratio: 16/9;
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	border-radius: 10px;
+	border-radius: 15px;
 	border: none;
 	overflow: hidden;
 }
@@ -18,7 +26,6 @@
 	background-color: rgb(245, 245, 245);
 	width: 100%;
 	aspect-ratio: 16/9;
-	border-radius: 15px;
 	border: none;
 	object-fit: contain;
 }
@@ -57,7 +64,7 @@
 		rgba(255, 255, 255, 0.4),
 		transparent
 	);
-	animation: shimmer 1.9s  infinite;
+	animation: shimmer 1.9s infinite;
 }
 
 @keyframes shimmer {

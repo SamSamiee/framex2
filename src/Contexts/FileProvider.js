@@ -4,7 +4,9 @@ import {
 	collection,
 	deleteDoc,
 	doc,
-	getDoc,
+	getDocs,
+	query,
+	where,
 	updateDoc,
 } from "firebase/firestore";
 import { storage, db } from "../config/firebase-config";
@@ -20,23 +22,77 @@ export const FileContext = React.createContext();
 
 export function FileProvider({ children }) {
 	const currentUser = React.useContext(AuthContext);
+	const [cards, setCards] = React.useState([]);
 	const [imageDB, setImageDB] = React.useState([]);
+	const allimagesRef = collection(db, "allimages");
+	const cardsCollectionRef = collection(db, "cards");
 
-	async function handleDeleteCard(cardId, imageIds = []) {
+	async function getCards() {
 		try {
-			const cardDoc = doc(db, "cards", cardId);
-			await deleteDoc(cardDoc);
-			for (const imageId of imageIds) {
-				const imageDoc = doc(db, "allimages", imageId);
-				await updateDoc(imageDoc, { lightbox: true });
-			}
+			const q = query(
+				cardsCollectionRef,
+				where("userId", "==", currentUser?.uid)
+			);
+			const data = await getDocs(q);
+			const filteredData = data.docs.map((doc) => ({
+				...doc.data(),
+				id: doc.id,
+			}));
+			setCards(filteredData);
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
+	async function getImages() {
+		try {
+			const q = query(allimagesRef, where("userId", "==", currentUser?.uid));
+			const data = (await getDocs(q)).docs.map((doc) => ({
+				...doc.data(),
+				id: doc.id,
+			}));
+			setImageDB(data);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	async function handleDeleteCard(cardId, imageIds = []) {
+		let deletedCard;
+
+		try {
+			// Create newCards by filtering out the one to delete
+			setCards((prevCards) => {
+				const index = prevCards.findIndex((card) => card.id === cardId);
+				if (index !== -1) {
+					deletedCard = prevCards[index];
+					const newCards = [...prevCards];
+					newCards.splice(index, 1);
+					return newCards;
+				}
+				return prevCards;
+			});
+
+			getImages();
+
+			const cardDoc = doc(db, "cards", cardId);
+			await deleteDoc(cardDoc);
+
+			for (const imageId of imageIds) {
+				const imageDoc = doc(db, "allimages", imageId);
+				await updateDoc(imageDoc, { lightbox: true });
+			}
+		} catch (err) {
+			if (deletedCard) {
+				// Add it back (at the end — or insert at original index if needed)
+				setCards((prev) => [...prev, deletedCard]);
+			}
+			console.error(err);
+		}
+	}
+
 	// upload images on the storage
-	async function addFiles(file, lightbox = true) {
+	async function addFile(file, lightbox = true) {
 		if (!file) {
 			return;
 		}
@@ -108,15 +164,69 @@ export function FileProvider({ children }) {
 		}
 	}
 
+	async function updateCard(cardId, newObj) {
+		const cardDoc = doc(db, "cards", cardId);
+		try {
+			await updateDoc(cardDoc, newObj);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	// Function to update existing images when they're used in cards
+	async function updateExistingImages(imageIds) {
+		try {
+			for (const imageId of imageIds) {
+				const imageDoc = doc(db, "allimages", imageId);
+				await updateDoc(imageDoc, { lightbox: false });
+			}
+		} catch (err) {
+			console.error("Error updating existing images:", err);
+		}
+	}
+
+	// Function to handle editing a card - coordinates with InsertProvider
+	async function handleEditCard(cardId, setInsertData) {
+		try {
+			// Find the card to edit
+			const cardToEdit = cards.find((card) => card.id === cardId);
+			if (!cardToEdit) {
+				console.error("Card not found");
+				return;
+			}
+
+			// Extract card data
+			const { description, imagesData, scheduleDetail } = cardToEdit;
+
+			// Call the setInsertData function from InsertProvider to populate the modal
+			setInsertData({
+				description: description || "",
+				imagesData: imagesData || [],
+				scheduleDetail: scheduleDetail || "",
+				cardId: cardId, // Store the card ID for updating later
+				isEditing: true, // Flag to indicate we're editing
+			});
+		} catch (err) {
+			console.error("Error preparing card for edit:", err);
+		}
+	}
+
 	return (
 		<FileContext.Provider
 			value={{
 				deleteImage,
-				addFiles,
+				addFile,
 				imageDB,
 				setImageDB,
 				addCard,
+				updateCard,
 				handleDeleteCard,
+				handleEditCard,
+				cards,
+				setCards,
+				getCards,
+				getImages,
+				updateExistingImages,
 			}}>
 			{children}
 		</FileContext.Provider>

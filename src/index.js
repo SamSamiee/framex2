@@ -6,14 +6,17 @@ import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./Contexts/AuthContext";
 import { TimerProvider } from "./Contexts/TimerProvider";
 import { FileProvider } from "../src/Contexts/FileProvider";
+import { InsertProvider } from "../src/Contexts/InsertProvider";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<AuthProvider>
 			<TimerProvider>
-				<FileProvider>
-					<App />
-				</FileProvider>
+				<InsertProvider>
+					<FileProvider>
+						<App />
+					</FileProvider>
+				</InsertProvider>
 			</TimerProvider>
 		</AuthProvider>
 	</React.StrictMode>

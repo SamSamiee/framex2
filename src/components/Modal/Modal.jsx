@@ -1,14 +1,19 @@
-import React from 'react'
+import React from "react";
 import styles from "./styles.module.css";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import { Plus } from "react-feather";
+import { InsertContext } from "../../Contexts/InsertProvider";
 
-function Modal({ children, modalOpen, setModalOpen }) {
+function Modal({ children }) {
+	const { clearInsertData, modalOpen, setModalOpen } =
+		React.useContext(InsertContext);
+
 	React.useEffect(() => {
 		function handleEsc(e) {
 			if (e.key === "Escape") {
 				setModalOpen(false);
+				clearInsertData();
 			}
 		}
 
@@ -17,7 +22,13 @@ function Modal({ children, modalOpen, setModalOpen }) {
 		});
 
 		return () => window.removeEventListener("keydown", handleEsc);
-	}, []);
+	}, [setModalOpen, clearInsertData]);
+
+	const handleModalClose = () => {
+		setModalOpen(false);
+		clearInsertData();
+	};
+
 	const modalOpenButtonStyle = modalOpen ? { position: "fixed" } : undefined;
 	const modalOpenWrapperStyle = modalOpen
 		? { position: "fixed", width: "100vw", height: "100vh" }
@@ -33,9 +44,7 @@ function Modal({ children, modalOpen, setModalOpen }) {
 			{modalOpen && (
 				<FocusLock>
 					<RemoveScroll>
-						<div
-							className={styles.backdrop}
-							onClick={() => setModalOpen(false)}>
+						<div className={styles.backdrop} onClick={handleModalClose}>
 							<div
 								className={styles.dialog}
 								onClick={(e) => e.stopPropagation()}>

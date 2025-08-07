@@ -2,6 +2,15 @@
 	--plate-back-color: rgb(233, 233, 233);
 }
 
+@keyframes mount {
+	from {
+		opacity: 0%;
+	}
+	to {
+		opacity: 188%;
+	}
+}
+
 .wrapper {
 	height: 100%;
 	width: 18vw;
@@ -42,17 +51,18 @@
 	border: none;
 }
 
-.add {
+.black {
 	border: none;
 	background-color: black;
 	color: white;
-	width: 50%;
-	max-width: 150px;
+	min-width: 120px;
+	width: 100%;
+	max-width: 160px;
 	height: 1.6em;
-	border-radius: 15px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	animation: mount 0.5s;
 }
 
 .PWrapper {
@@ -84,7 +94,6 @@
 	transition: all ease 1s;
 }
 
-
 @media (max-width: 1000px) {
 	.wrapper {
 		/* background-color: red; */
@@ -110,3 +119,16 @@
 		padding: 39px;
 	}
 }
+
+.Buttons {
+	min-height: 1.6em;
+	min-width: 40%;
+	width: fit-content;
+	display: flex;
+	gap: 5px;
+	overflow: hidden;
+	border-radius: 15px;
+	justify-content: center;
+	/* background-color: red; */
+}
+

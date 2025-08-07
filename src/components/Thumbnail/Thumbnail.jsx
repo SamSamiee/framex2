@@ -1,25 +1,17 @@
 import React from "react";
 import styles from "./styles.module.css";
+import { InsertContext } from "../../Contexts/InsertProvider";
 
-function Thumbnail({
-	url,
-	deleteFunction,
-	selectedThumbnails,
-	setSelectedThumbnails,
-}) {
-	const selected = selectedThumbnails.includes(url);
-	const toggleSelect = (e) => {
-		return !e;
-	};
+function Thumbnail({ url, deleteFunction, obj }) {
+	const { selectedThumbnails, setSelectedThumbnails } =
+		React.useContext(InsertContext);
+	const selected = selectedThumbnails.includes(obj);
 	const [loaded, setloaded] = React.useState(false);
-	const opacity =
-		!selectedThumbnails.includes(url) && selectedThumbnails.length >= 4
-			? "40%"
-			: "100%";
+	const opacity = !selected && selectedThumbnails.length >= 4 ? "40%" : "100%";
 	if (Boolean(!url)) return <div className={styles.skeleton}></div>;
 
 	return (
-		<div style={{ opacity }}>
+		<div className={styles.wrapper} style={{ opacity }}>
 			{!loaded && <div className={styles.skeleton}></div>}
 			<div
 				className={`${styles.slot} ${selected ? styles.selected : undefined}`}
@@ -28,12 +20,11 @@ function Thumbnail({
 					if (selectedThumbnails.length === 4 && !selected) {
 						return;
 					}
-					toggleSelect((p) => !p);
 					setSelectedThumbnails((p) => {
 						if (!selected) {
-							return [...p, url].slice(-4);
+							return [...p, obj].slice(-4);
 						} else {
-							return p.filter((item) => item !== url);
+							return p.filter((item) => item.id !== obj.id);
 						}
 					});
 				}}>

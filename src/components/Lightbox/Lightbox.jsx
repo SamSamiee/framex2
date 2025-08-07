@@ -2,13 +2,15 @@ import React from "react";
 import Thumbnail from "../Thumbnail/Thumbnail";
 import styles from "./styles.module.css";
 import { Disc, Plus } from "react-feather";
-import { FileContext } from "../../Contexts/FileProvider";
+import { FileContext } from "../../Contexts/FileProvider.js";
+import { InsertContext } from "../../Contexts/InsertProvider.js";
 
 function Lightbox() {
+	const { setModalOpen, selectedThumbnails, handleUploadCartWithLink } =
+		React.useContext(InsertContext);
 	const inputRef = React.useRef(null);
 	const [isOpen, setIsOpen] = React.useState(true);
-	const [selectedThumbnails, setSelectedThumbnails] = React.useState([]);
-	const { setImageDB, addFiles, imageDB, deleteImage } =
+	const { setImageDB, addFile, imageDB, deleteImage } =
 		React.useContext(FileContext);
 
 	return (
@@ -32,16 +34,32 @@ function Lightbox() {
 						const files = Array.from(e.target.files);
 						if (!files.length) return;
 						files.forEach((file) => {
-							addFiles(file);
+							addFile(file);
 						});
 						e.target.value = null; // Reset input so same file can be uploaded again
 					}}
 				/>
-				<button
-					className={styles.add}
-					onClick={() => inputRef?.current?.click()}>
-					<Plus />
-				</button>
+				<div className={styles.Buttons}>
+					{Boolean(selectedThumbnails.length) && (
+						<button
+							onClick={() => {
+								setModalOpen(true);
+								console.log('the lightbox"s isOpen is now:');
+								console.log(isOpen);
+								console.log("and now we are reversing it");
+								setIsOpen((p) => !p);
+								handleUploadCartWithLink(selectedThumbnails);
+							}}
+							className={styles.black}>
+							Post
+						</button>
+					)}
+					<button
+						className={styles.black}
+						onClick={() => inputRef?.current?.click()}>
+						<Plus />
+					</button>
+				</div>
 				{imageDB?.length === 0 ? (
 					<div className={styles.PWrapper}>
 						<p className={styles.description}>
@@ -60,13 +78,13 @@ function Lightbox() {
 						</p>
 					</div>
 				) : (
-					imageDB?.map(({ url, id, lightbox, show }) => {
+					imageDB?.map((obj) => {
+						const { url, id, lightbox, show } = obj;
 						return (
 							lightbox &&
 							show && (
 								<Thumbnail
-									selectedThumbnails={selectedThumbnails}
-									setSelectedThumbnails={setSelectedThumbnails}
+									obj={obj}
 									key={url}
 									url={url}
 									deleteFunction={async (e) => {

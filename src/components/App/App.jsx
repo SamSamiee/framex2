@@ -5,63 +5,18 @@ import LoginPage from "../LoginPage";
 import InsertCard from "../InsertCard";
 import Header from "../Header";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { db } from "../../config/firebase-config";
-import { getDocs, collection, query, where } from "firebase/firestore";
 import Modal from "../Modal";
 import Lightbox from "../Lightbox";
 import { FileContext } from "../../Contexts/FileProvider";
-
+import { InsertContext } from "../../Contexts/InsertProvider";
 function App() {
 	const currentUser = React.useContext(AuthContext);
-	const { setImageDB, handleDeleteCard } = React.useContext(FileContext);
-	const cardsCollectionRef = collection(db, "cards");
-	const allimagesRef = collection(db, "allimages");
-	const [cards, setCards] = React.useState([]);
-	const [modalOpen, setModalOpen] = React.useState(false);
-
+	const { getCards, getImages, cards } = React.useContext(FileContext);
+	const { modalOpen, setModalOpen } = React.useContext(InsertContext);
 	React.useEffect(() => {
-		async function getCards() {
-			try {
-				const q = query(
-					cardsCollectionRef,
-					where("userId", "==", currentUser?.uid)
-				);
-				const data = await getDocs(q);
-				const filteredData = data.docs.map((doc) => ({
-					...doc.data(),
-					id: doc.id,
-				}));
-				setCards(filteredData);
-			} catch (err) {
-				console.error(err);
-			}
-		}
 		getCards();
-	}, []); /*eslint-disable-line*/
-
-	React.useEffect(() => {
-		async function getImages() {
-			try {
-				const q = query(allimagesRef, where("userId", "==", currentUser?.uid));
-				const data = (await getDocs(q)).docs.map((doc) => ({
-					...doc.data(),
-					id: doc.id,
-				}));
-				setImageDB(data);
-			} catch (err) {
-				console.error(err);
-			}
-		}
 		getImages();
 	}, []); /*eslint-disable-line*/
-
-	function updateCardSchedule(id, newSchedule) {
-		setCards((prevCards) =>
-			prevCards.map((card) =>
-				card.id === id ? { ...card, scheduleDetail: newSchedule } : card
-			)
-		);
-	}
 
 	if (!currentUser) {
 		return <LoginPage />;
@@ -74,25 +29,20 @@ function App() {
 						<InsertCard modalOpen={modalOpen} setModalOpen={setModalOpen} />
 					</Modal>
 					<div className={styles.Body}>
-						{cards.map(({ description, scheduleDetail, id, imagesData }) => {
-							//imagesData=[{url,  id},  {url, id}]
-							const urls = imagesData?.map(({ url }) => url);
-							const imageIds = imagesData?.map(({ id }) => id);
-							return (
-								<Cart
-									onDelete={() => handleDeleteCard(id)}
-									key={id}
-									urls={urls}
-									imageIds={imageIds}
-									id={id}
-									slots={urls?.length}
-									onScheduleChange={updateCardSchedule}
-									scheduleDetail={scheduleDetail}>
-									{description}
-								</Cart>
-							);
-						})}
-						<Lightbox />
+						{cards.length >= 1 ? (
+							cards.map(({ description, scheduleDetail, id, imagesData }) => {
+								//imagesData=[{url,  id},  {url, id}] or optimistic images with isOptimistic flag
+								const imageIds = imagesData?.map(({ id }) => id);
+								return (
+									<Cart key={id} urls={imagesData} imageIds={imageIds} id={id}>
+										{description}
+									</Cart>
+								);
+							})
+						) : (
+							<h1>start adding cards</h1>
+						)}
+						<Lightbox modalOpen={modalOpen} setModalOpen={setModalOpen} />
 					</div>
 				</div>
 			</>
