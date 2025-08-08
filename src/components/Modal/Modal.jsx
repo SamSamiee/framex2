@@ -1,13 +1,12 @@
-import React from "react";
+import React from 'react'
 import styles from "./styles.module.css";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import { Plus } from "react-feather";
 import { InsertContext } from "../../Contexts/InsertProvider";
 
-function Modal({ children }) {
-	const { clearInsertData, modalOpen, setModalOpen } =
-		React.useContext(InsertContext);
+function Modal({ children, modalOpen, setModalOpen }) {
+	const { clearInsertData } = React.useContext(InsertContext);
 
 	React.useEffect(() => {
 		function handleEsc(e) {
@@ -44,7 +43,9 @@ function Modal({ children }) {
 			{modalOpen && (
 				<FocusLock>
 					<RemoveScroll>
-						<div className={styles.backdrop} onClick={handleModalClose}>
+						<div
+							className={styles.backdrop}
+							onClick={handleModalClose}>
 							<div
 								className={styles.dialog}
 								onClick={(e) => e.stopPropagation()}>
