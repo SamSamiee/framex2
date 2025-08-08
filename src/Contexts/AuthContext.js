@@ -9,6 +9,15 @@ export function AuthProvider({ children }) {
 	const [loading, setLoading] = React.useState(true);
 
 	React.useEffect(() => {
+		// Check if auth is available
+		if (!auth) {
+			console.error(
+				"Firebase auth is not available. Check your configuration."
+			);
+			setLoading(false);
+			return;
+		}
+
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			setCurrentUser(user);
 			setLoading(false);
