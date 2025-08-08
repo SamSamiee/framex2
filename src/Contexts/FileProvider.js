@@ -96,9 +96,9 @@ export function FileProvider({ children }) {
 		if (!file) {
 			return;
 		}
-		const tempId = file.name + Date.now();
+		const tempId = crypto.randomUUID();
 		const tempObj = {
-			url: null,
+			url: "",
 			id: tempId,
 			lightbox,
 			userId: currentUser.id,

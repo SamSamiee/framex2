@@ -1,10 +1,20 @@
-.wrapper {
+.Mainwrapper {
+	background-color: rgb(238, 223, 223);
+	height: 100vh;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 }
 
-.Body{
-	/* background-color: rgb(222, 177, 177); */
+.wrapper {
+	padding-top: 150px;
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	background-color: rgb(255, 255, 255);
+	width: 100%;
+	max-width: 1200px;
 }

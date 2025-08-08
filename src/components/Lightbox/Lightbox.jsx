@@ -44,9 +44,6 @@ function Lightbox() {
 						<button
 							onClick={() => {
 								setModalOpen(true);
-								console.log('the lightbox"s isOpen is now:');
-								console.log(isOpen);
-								console.log("and now we are reversing it");
 								setIsOpen((p) => !p);
 								handleUploadCartWithLink(selectedThumbnails);
 							}}

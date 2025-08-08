@@ -2,10 +2,8 @@ import React from "react";
 import styles from "./styles.module.css";
 import Cart from "../Cart";
 import LoginPage from "../LoginPage";
-import InsertCard from "../InsertCard";
 import Header from "../Header";
 import { AuthContext } from "../../Contexts/AuthContext";
-import Modal from "../Modal";
 import Lightbox from "../Lightbox";
 import { FileContext } from "../../Contexts/FileProvider";
 import { InsertContext } from "../../Contexts/InsertProvider";
@@ -22,30 +20,31 @@ function App() {
 		return <LoginPage />;
 	} else {
 		return (
-			<>
-				<div className={styles.wrapper}>
-					<Header />
-					<Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-						<InsertCard modalOpen={modalOpen} setModalOpen={setModalOpen} />
-					</Modal>
-					<div className={styles.Body}>
-						{cards.length >= 1 ? (
-							cards.map(({ description, scheduleDetail, id, imagesData }) => {
-								//imagesData=[{url,  id},  {url, id}] or optimistic images with isOptimistic flag
-								const imageIds = imagesData?.map(({ id }) => id);
-								return (
-									<Cart key={id} urls={imagesData} imageIds={imageIds} id={id}>
-										{description}
-									</Cart>
-								);
-							})
-						) : (
-							<h1>start adding cards</h1>
-						)}
-						<Lightbox modalOpen={modalOpen} setModalOpen={setModalOpen} />
+				<div className={styles.Mainwrapper}>
+					<div className={styles.wrapper}>
+						<Header />
+						<div className={styles.Body}>
+							{cards.length >= 1 ? (
+								cards.map(({ description, scheduleDetail, id, imagesData }) => {
+									//imagesData=[{url,  id},  {url, id}] or optimistic images with isOptimistic flag
+									const imageIds = imagesData?.map(({ id }) => id);
+									return (
+										<Cart
+											key={id}
+											urls={imagesData}
+											imageIds={imageIds}
+											id={id}>
+											{description}
+										</Cart>
+									);
+								})
+							) : (
+								<h1>start adding cards</h1>
+							)}
+							<Lightbox modalOpen={modalOpen} setModalOpen={setModalOpen} />
+						</div>
 					</div>
 				</div>
-			</>
 		);
 	}
 }
