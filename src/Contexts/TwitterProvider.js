@@ -49,35 +49,53 @@ export function TwitterProvider({ children }) {
 
 	const connectTwitter = async () => {
 		try {
-			// Since we can't do real OAuth from frontend, we'll simulate a connection
-			// In a real app, you'd need a backend server for secure OAuth
+			// Get real request token from Twitter
+			const requestTokenData = await twitterService.getRequestToken();
 
-			const confirmed = window.confirm(
-				"🐦 Connect to Twitter?\n\n" +
-					"This will simulate a Twitter connection for demo purposes.\n" +
-					"In a real implementation, you'd authorize through Twitter's OAuth."
+			// Store the token secret temporarily for the callback
+			sessionStorage.setItem(
+				"twitter_oauth_token_secret",
+				requestTokenData.oauth_token_secret
 			);
 
-			if (!confirmed) return;
+			// Open Twitter authorization popup
+			const popup = window.open(
+				requestTokenData.auth_url,
+				"twitter-auth",
+				"width=600,height=600,scrollbars=yes,resizable=yes"
+			);
 
-			// Simulate successful connection
-			const mockTokenData = {
-				oauth_token: "demo_token_" + Date.now(),
-				oauth_token_secret: "demo_secret_" + Date.now(),
-				user_id: "demo_user_" + Date.now(),
-				screen_name: currentUser?.displayName || "DemoUser",
+			// Listen for messages from the popup
+			const handleMessage = (event) => {
+				if (event.origin !== window.location.origin) return;
+
+				if (event.data.type === "TWITTER_AUTH_SUCCESS") {
+					popup.close();
+					window.removeEventListener("message", handleMessage);
+					alert(
+						"✅ Twitter connected successfully! You can now post real tweets! 🐦"
+					);
+				} else if (event.data.type === "TWITTER_AUTH_ERROR") {
+					popup.close();
+					window.removeEventListener("message", handleMessage);
+					alert("Failed to connect Twitter: " + event.data.error);
+				}
 			};
 
-			// Save the simulated token
-			await saveTwitterToken(mockTokenData);
+			window.addEventListener("message", handleMessage);
 
-			alert(
-				"✅ Twitter connected successfully!\n\n" +
-					"This is a demo connection. Tweet posting will open Twitter's web interface."
-			);
+			// Check if popup was closed manually
+			const checkClosed = setInterval(() => {
+				if (popup.closed) {
+					clearInterval(checkClosed);
+					window.removeEventListener("message", handleMessage);
+					sessionStorage.removeItem("twitter_oauth_token_secret");
+				}
+			}, 1000);
 		} catch (err) {
 			console.error("Error connecting Twitter:", err);
-			alert("Failed to connect Twitter. Please try again.");
+			alert("Failed to connect Twitter: " + err.message);
+			sessionStorage.removeItem("twitter_oauth_token_secret");
 		}
 	};
 

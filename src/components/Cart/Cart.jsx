@@ -42,12 +42,16 @@ function Cart({ urls, imageIds, children, id }) {
 			const tweetText = children || "Check out my post from FrameX! 🖼️";
 
 			// Post tweet directly through API
-			await postTweet(tweetText, firstImageUrl);
+			const result = await postTweet(tweetText, firstImageUrl);
 
-			// Show success message
-			alert(
-				"🐦 Tweet posted!\n\nOpened Twitter's compose window with your content. Complete the post there!"
-			);
+			// Show success message with tweet URL
+			if (result.url) {
+				alert(
+					`🐦 Tweet posted successfully!\n\nView your tweet: ${result.url}`
+				);
+			} else {
+				alert("🐦 Tweet posted successfully!");
+			}
 		} catch (err) {
 			console.error("Error posting tweet:", err);
 			alert("Failed to post tweet. Please try again.");

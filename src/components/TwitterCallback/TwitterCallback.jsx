@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { TwitterContext } from "../../Contexts/TwitterProvider";
+import twitterService from "../../services/twitterService";
 
 function TwitterCallback() {
 	const { saveTwitterToken } = useContext(TwitterContext);
@@ -31,13 +32,12 @@ function TwitterCallback() {
 					throw new Error("Missing OAuth token secret");
 				}
 
-				// For frontend-only implementation, simulate successful authentication
-				const tokenData = {
-					oauth_token: "access_token_" + Date.now(),
-					oauth_token_secret: "access_secret_" + Date.now(),
-					user_id: "mock_user_" + Date.now(),
-					screen_name: "MockUser",
-				};
+				// Exchange for real access token
+				const tokenData = await twitterService.getAccessToken(
+					oauth_token,
+					oauth_token_secret,
+					oauth_verifier
+				);
 
 				// Save token data
 				await saveTwitterToken(tokenData);
