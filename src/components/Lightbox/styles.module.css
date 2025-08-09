@@ -123,7 +123,6 @@
 .Buttons {
 	min-height: 1.6em;
 	min-width: 40%;
-	width: fit-content;
 	display: flex;
 	gap: 5px;
 	overflow: hidden;

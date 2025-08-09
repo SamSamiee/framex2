@@ -96,15 +96,20 @@ export function FileProvider({ children }) {
 		if (!file) {
 			return;
 		}
+
 		const tempId = crypto.randomUUID();
 		const tempObj = {
 			url: "",
 			id: tempId,
 			lightbox,
-			userId: currentUser.id,
+			userId: currentUser.uid,
 			show: true,
+			isLoading: true, // Add loading flag
 		};
+
+		// Add temporary object to show shimmer
 		setImageDB((p) => [...p, tempObj]);
+
 		const allimagesRef = collection(db, "allimages");
 		const folderRef = ref(
 			storage,
@@ -113,24 +118,41 @@ export function FileProvider({ children }) {
 				"-"
 			)}/${file.name}`
 		);
+
 		try {
 			await uploadBytes(folderRef, file);
 			const url = await getDownloadURL(folderRef);
+
+			// Preload the image before updating imageDB
+			await new Promise((resolve, reject) => {
+				const img = new Image();
+				img.onload = resolve;
+				img.onerror = reject;
+				img.src = url;
+			});
+
 			const newObj = {
 				url,
 				lightbox,
 				userId: currentUser.uid,
 				show: true,
+				isLoading: false, // Image is loaded
 			};
+
 			const docRef = await addDoc(allimagesRef, newObj);
+
+			// Now update with the loaded image
 			setImageDB((prevArr) => {
 				return prevArr.map((item) => {
 					return item.id === tempId ? { ...newObj, id: docRef.id } : item;
 				});
 			});
+
 			return { url, id: docRef.id };
 		} catch (err) {
 			console.error(err);
+			// Remove failed upload from imageDB
+			setImageDB((prevArr) => prevArr.filter((item) => item.id !== tempId));
 		}
 	}
 

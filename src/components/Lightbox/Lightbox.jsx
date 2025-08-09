@@ -40,7 +40,7 @@ function Lightbox() {
 					<Disc />
 				</button>
 			</motion.div>
-			<motion.div layout="position" className={styles.plate}>
+			<motion.div className={styles.plate}>
 				<input
 					style={{ display: "none" }}
 					ref={inputRef}
@@ -51,7 +51,7 @@ function Lightbox() {
 						const files = Array.from(e.target.files);
 						if (!files.length) return;
 						files.forEach((file) => {
-							addFile(file);
+							addFile(file, true);
 						});
 						e.target.value = null; // Reset input so same file can be uploaded again
 					}}
