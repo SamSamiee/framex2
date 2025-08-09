@@ -45,7 +45,9 @@ function Cart({ urls, imageIds, children, id }) {
 			await postTweet(tweetText, firstImageUrl);
 
 			// Show success message
-			alert("🐦 Tweet posted!\n\nOpened Twitter's compose window with your content. Complete the post there!");
+			alert(
+				"🐦 Tweet posted!\n\nOpened Twitter's compose window with your content. Complete the post there!"
+			);
 		} catch (err) {
 			console.error("Error posting tweet:", err);
 			alert("Failed to post tweet. Please try again.");

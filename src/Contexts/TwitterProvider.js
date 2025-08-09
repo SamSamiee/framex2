@@ -51,15 +51,15 @@ export function TwitterProvider({ children }) {
 		try {
 			// Since we can't do real OAuth from frontend, we'll simulate a connection
 			// In a real app, you'd need a backend server for secure OAuth
-			
+
 			const confirmed = window.confirm(
 				"🐦 Connect to Twitter?\n\n" +
-				"This will simulate a Twitter connection for demo purposes.\n" +
-				"In a real implementation, you'd authorize through Twitter's OAuth."
+					"This will simulate a Twitter connection for demo purposes.\n" +
+					"In a real implementation, you'd authorize through Twitter's OAuth."
 			);
-			
+
 			if (!confirmed) return;
-			
+
 			// Simulate successful connection
 			const mockTokenData = {
 				oauth_token: "demo_token_" + Date.now(),
@@ -67,13 +67,14 @@ export function TwitterProvider({ children }) {
 				user_id: "demo_user_" + Date.now(),
 				screen_name: currentUser?.displayName || "DemoUser",
 			};
-			
+
 			// Save the simulated token
 			await saveTwitterToken(mockTokenData);
-			
-			alert("✅ Twitter connected successfully!\n\n" +
-				  "This is a demo connection. Tweet posting will open Twitter's web interface.");
-			
+
+			alert(
+				"✅ Twitter connected successfully!\n\n" +
+					"This is a demo connection. Tweet posting will open Twitter's web interface."
+			);
 		} catch (err) {
 			console.error("Error connecting Twitter:", err);
 			alert("Failed to connect Twitter. Please try again.");
