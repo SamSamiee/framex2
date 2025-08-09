@@ -61,7 +61,7 @@ export function FileProvider({ children }) {
 		let deletedCard;
 
 		try {
-			// Create newCards by filtering out the one to delete
+			// Optimistically remove card
 			setCards((prevCards) => {
 				const index = prevCards.findIndex((card) => card.id === cardId);
 				if (index !== -1) {
@@ -73,8 +73,14 @@ export function FileProvider({ children }) {
 				return prevCards;
 			});
 
-			getImages();
+			// Optimistically update lightbox
+			setImageDB((prevImageDB) => {
+				return prevImageDB.map((image) =>
+					imageIds.includes(image.id) ? { ...image, lightbox: true } : image
+				);
+			});
 
+			// Database operations
 			const cardDoc = doc(db, "cards", cardId);
 			await deleteDoc(cardDoc);
 
@@ -83,11 +89,12 @@ export function FileProvider({ children }) {
 				await updateDoc(imageDoc, { lightbox: true });
 			}
 		} catch (err) {
+			console.error("Error deleting card:", err);
+			// On error, refresh from database
 			if (deletedCard) {
-				// Add it back (at the end — or insert at original index if needed)
 				setCards((prev) => [...prev, deletedCard]);
 			}
-			console.error(err);
+			getImages(); // Refresh imageDB from database
 		}
 	}
 

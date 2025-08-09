@@ -6,9 +6,10 @@ import { FileContext } from "../../Contexts/FileProvider.js";
 import { InsertContext } from "../../Contexts/InsertProvider.js";
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
+import { setSelectionRange } from "@testing-library/user-event/dist/utils/index.js";
 
 function Lightbox() {
-	const { setModalOpen, selectedThumbnails, handleUploadCartWithLink } =
+	const { setModalOpen, selectedThumbnails, setSelectedThumbnails, handleUploadCartWithLink } =
 		React.useContext(InsertContext);
 	const inputRef = React.useRef(null);
 	const [isOpen, setIsOpen] = React.useState(true);
@@ -62,7 +63,27 @@ function Lightbox() {
 							onClick={() => {
 								setModalOpen(true);
 								setIsOpen((p) => !p);
-								handleUploadCartWithLink(selectedThumbnails);
+								let prevImageDB;
+								try {
+									// Save previous imageDB for rollback in case of error
+									prevImageDB = imageDB;
+
+									// Optimistically update imageDB so selected thumbnails have lightbox: false
+									setImageDB((prev) =>
+										prev.map((img) =>
+											selectedThumbnails.some((thumb) => thumb.id === img.id)
+												? { ...img, lightbox: false }
+												: img
+										)
+									);
+									setSelectedThumbnails([])
+									handleUploadCartWithLink();
+								} catch (err) {
+									console.error(err);
+									if (prevImageDB) {
+										setImageDB(prevImageDB);
+									}
+								}
 							}}
 							className={styles.black}>
 							Post
@@ -74,7 +95,7 @@ function Lightbox() {
 						<Plus />
 					</button>
 				</div>
-				{imageDB?.length === 0 ? (
+				{imageDB?.length === 0 || imageDB.every((item) => !item.lightbox) ? (
 					<div className={styles.PWrapper}>
 						<p className={styles.description}>
 							<span style={{ opacity: "50%" }}>
