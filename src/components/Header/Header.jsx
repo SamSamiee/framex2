@@ -6,6 +6,7 @@ import styles from "./styles.module.css";
 import Modal from "../Modal/Modal";
 import InsertCard from "../InsertCard/InsertCard";
 import { InsertContext } from "../../Contexts/InsertProvider";
+import { TwitterContext } from "../../Contexts/TwitterProvider";
 import { motion } from "framer-motion";
 
 const MOTION = {
@@ -17,6 +18,8 @@ const MOTION = {
 function Header() {
 	const [isOpen, setIsOpen] = React.useState(false);
 	const { modalOpen, setModalOpen } = React.useContext(InsertContext);
+	const { twitterConnected, connectTwitter, disconnectTwitter } =
+		React.useContext(TwitterContext);
 	const [hoveredButton, setHoveredButton] = React.useState(null);
 	const id = React.useId();
 	async function logout() {
@@ -28,9 +31,10 @@ function Header() {
 	}
 
 	const Buttons = [
-		{ label: "logout" },
+		{ label: "logout", action: logout },
 		{
-			label: "connect X",
+			label: twitterConnected ? "disconnect X" : "connect X",
+			action: twitterConnected ? disconnectTwitter : connectTwitter,
 		},
 	];
 
@@ -57,9 +61,10 @@ function Header() {
 						<img src={currentUser?.photoURL} alt="user's profile picture" />
 					</button>
 					{isOpen &&
-						Buttons.map(({ label }) => {
+						Buttons.map(({ label, action }) => {
 							return (
 								<div
+									key={label}
 									className={styles.ButtonPack}
 									style={{ zIndex: hoveredButton === label ? 1 : 2 }}>
 									{hoveredButton === label && (
@@ -70,14 +75,17 @@ function Header() {
 										/>
 									)}
 									<motion.button
-										initial={{ opacity: 0, color: 'white' }}
+										initial={{ opacity: 0, color: "white" }}
 										animate={{
 											color: hoveredButton === label ? "black" : "#dedede",
 											opacity: isOpen ? 1 : 0,
 										}}
-										transition={{ color: { duration: 1 }, opacity: { duration: 0.2 } }}
+										transition={{
+											color: { duration: 1 },
+											opacity: { duration: 0.2 },
+										}}
 										className={styles.button}
-										onClick={logout}
+										onClick={action}
 										onMouseEnter={() => setHoveredButton(label)}>
 										{label}
 									</motion.button>
