@@ -4,6 +4,8 @@ import styles from "./styles.module.css";
 import { Disc, Plus } from "react-feather";
 import { FileContext } from "../../Contexts/FileProvider.js";
 import { InsertContext } from "../../Contexts/InsertProvider.js";
+import { motion } from "framer-motion";
+import { useMediaQuery } from "react-responsive";
 
 function Lightbox() {
 	const { setModalOpen, selectedThumbnails, handleUploadCartWithLink } =
@@ -12,18 +14,33 @@ function Lightbox() {
 	const [isOpen, setIsOpen] = React.useState(true);
 	const { setImageDB, addFile, imageDB, deleteImage } =
 		React.useContext(FileContext);
+	const isMobile = useMediaQuery({ maxWidth: 1000 });
+
+	const animate = {
+		transform: !isMobile
+			? isOpen
+				? "translateX(calc(18vw - 60px))"
+				: "translateX(0)"
+			: isOpen
+			? "translateY(calc(100% - 60px)) translateX(50%)"
+			: "translateY(10%) translateX(50%)",
+	};
 
 	return (
-		<div className={`${styles.wrapper} ${isOpen ? styles.open : undefined}`}>
-			<div className={styles.handle}>
+		<motion.div
+			className={styles.wrapper}
+			initial={false}
+			transition={{ type: "spring", stiffness: 200, damping: 25 }}
+			animate={animate}>
+			<motion.div layout="position" className={styles.handle}>
 				<button
 					onClick={() => {
 						setIsOpen((p) => !p);
 					}}>
 					<Disc />
 				</button>
-			</div>
-			<div className={styles.plate}>
+			</motion.div>
+			<motion.div layout="position" className={styles.plate}>
 				<input
 					style={{ display: "none" }}
 					ref={inputRef}
@@ -96,8 +113,8 @@ function Lightbox() {
 						);
 					})
 				)}
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 }
 
