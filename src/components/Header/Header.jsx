@@ -17,6 +17,8 @@ const MOTION = {
 function Header() {
 	const [isOpen, setIsOpen] = React.useState(false);
 	const { modalOpen, setModalOpen } = React.useContext(InsertContext);
+	const [hoveredButton, setHoveredButton] = React.useState(null);
+	const id = React.useId();
 	async function logout() {
 		try {
 			await signOut(auth);
@@ -25,9 +27,17 @@ function Header() {
 		}
 	}
 
+	const Buttons = [
+		{ label: "logout" },
+		{
+			label: "connect X",
+		},
+	];
+
 	const currentUser = React.useContext(AuthContext);
 	return (
 		<motion.div
+			onMouseLeave={() => setHoveredButton(null)}
 			className={`${styles.headerWrapper} ${isOpen ? styles.Open : undefined}`}
 			layout={true}
 			transition={MOTION}
@@ -46,14 +56,34 @@ function Header() {
 						}}>
 						<img src={currentUser?.photoURL} alt="user's profile picture" />
 					</button>
-					{isOpen && (
-						<>
-							<button className={styles.button} onClick={logout}>
-								log out
-							</button>
-							<button className={styles.button}>connect X</button>
-						</>
-					)}
+					{isOpen &&
+						Buttons.map(({ label }) => {
+							return (
+								<div
+									className={styles.ButtonPack}
+									style={{ zIndex: hoveredButton === label ? 1 : 2 }}>
+									{hoveredButton === label && (
+										<motion.div
+											layoutId={id}
+											transition={{ duration: 0.2 }}
+											className={styles.backdrop}
+										/>
+									)}
+									<motion.button
+										initial={{ opacity: 0, color: 'white' }}
+										animate={{
+											color: hoveredButton === label ? "black" : "#dedede",
+											opacity: isOpen ? 1 : 0,
+										}}
+										transition={{ color: { duration: 1 }, opacity: { duration: 0.2 } }}
+										className={styles.button}
+										onClick={logout}
+										onMouseEnter={() => setHoveredButton(label)}>
+										{label}
+									</motion.button>
+								</div>
+							);
+						})}
 					<motion.div transition={MOTION} layout={true}>
 						<Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
 							<InsertCard modalOpen={modalOpen} setModalOpen={setModalOpen} />

@@ -20,31 +20,27 @@ function App() {
 		return <LoginPage />;
 	} else {
 		return (
-				<div className={styles.Mainwrapper}>
-					<div className={styles.wrapper}>
-						<Header />
-						<div className={styles.Body}>
-							{cards.length >= 1 ? (
-								cards.map(({ description, scheduleDetail, id, imagesData }) => {
-									//imagesData=[{url,  id},  {url, id}] or optimistic images with isOptimistic flag
-									const imageIds = imagesData?.map(({ id }) => id);
-									return (
-										<Cart
-											key={id}
-											urls={imagesData}
-											imageIds={imageIds}
-											id={id}>
-											{description}
-										</Cart>
-									);
-								})
-							) : (
-								<h1>start adding cards</h1>
-							)}
-							<Lightbox modalOpen={modalOpen} setModalOpen={setModalOpen} />
-						</div>
+			<div className={styles.Mainwrapper}>
+				<div className={styles.wrapper}>
+					<Header />
+					<div className={styles.Body}>
+						{cards.length >= 1 ? (
+							cards.map(({ description, scheduleDetail, id, imagesData }) => {
+								//imagesData=[{url,  id},  {url, id}] or optimistic images with isOptimistic flag
+								const imageIds = imagesData?.map(({ id }) => id);
+								return (
+									<Cart key={id} urls={imagesData} imageIds={imageIds} id={id}>
+										{description}
+									</Cart>
+								);
+							})
+						) : (
+							<h1>start adding cards</h1>
+						)}
+						<Lightbox modalOpen={modalOpen} setModalOpen={setModalOpen} />
 					</div>
 				</div>
+			</div>
 		);
 	}
 }
