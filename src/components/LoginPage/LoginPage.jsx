@@ -16,7 +16,7 @@ function LoginPage() {
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.card}>
-				<h1>let's get you signed in:</h1>
+				<p>let's get you signed in:</p>
 				<button onClick={() => signInWithGoogle()} className={styles.signInBtn}>
 					<FcGoogle />
 					Sign in with Google

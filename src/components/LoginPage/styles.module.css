@@ -1,3 +1,26 @@
+:root {
+	--shadow-color: 147deg 20% 36%;
+	--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+		0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
+		1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
+	--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.36),
+		0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.36),
+		2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.36),
+		5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
+	--shadow-elevation-high: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+		1.5px 2.9px 3.7px -0.4px hsl(var(--shadow-color) / 0.34),
+		2.7px 5.4px 6.8px -0.7px hsl(var(--shadow-color) / 0.34),
+		4.5px 8.9px 11.2px -1.1px hsl(var(--shadow-color) / 0.34),
+		7.1px 14.3px 18px -1.4px hsl(var(--shadow-color) / 0.34),
+		11.2px 22.3px 28.1px -1.8px hsl(var(--shadow-color) / 0.34),
+		17px 33.9px 42.7px -2.1px hsl(var(--shadow-color) / 0.34),
+		25px 50px 62.9px -2.5px hsl(var(--shadow-color) / 0.34);
+}
+
+body {
+	background-color: #80ae94;
+}
+
 .wrapper {
 	width: 100%;
 	height: 100%;
@@ -6,29 +29,58 @@
 	align-items: center;
 }
 
+.card p {
+	color: #3e7a58;
+	font-size: 1.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .card {
-	width: 80%;
-	max-width: 1000px;
-	height: 60%;
-	background-color: rgb(255, 236, 202);
+	max-width: 500px;
+	max-height: 500px;
+	padding: 80px;
+	background-color: rgb(235, 233, 226);
 	border-radius: 20px;
-	box-shadow: 7px 7px #ffe11e, 14px 14px #ff2a00;
+	box-shadow: var(--shadow-elevation-medium);
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
-  gap: 20px;
+	gap: 20px;
 }
 
 .signInBtn {
 	display: flex;
-  border: 3px solid rgb(231, 231, 231);
+	/* border: 3px solid rgb(231, 231, 231); */
+	border: none;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	background-color: rgb(255, 255, 255);
-  border-radius: 20px;
+	color: rgb(255, 255, 255);
+	color: #416450;
+	background-color: #cdd8b3;
+	border-radius: 20px;
 	padding: 5px 10px;
 	gap: 10px;
 	font-size: 1.3em;
+	transition: all 0.3s ease;
+}
+
+.signInBtn:hover {
+	cursor: pointer;
+	transform: scale(1.15) rotate(5deg);
+	box-shadow: var(--shadow-elevation-high);
+}
+
+@media (max-width: 1000px) {
+	.card {
+		padding: 40px;
+	}
+
+	.signInBtn:hover {
+		transform: scale(1.05);
+		box-shadow: var(--shadow-elevation-medium);
+	}
 }

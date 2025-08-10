@@ -9,26 +9,22 @@
 }
 
 .wrapper {
-	/* position: fixed; */
-	animation: fadeIn 0.2s ease-out forwards;
+	position: fixed;
 	top: 0;
 	left: 0;
-	/* width: 100vw; */
-	/* height: 100vh; */
-	/* background-color: red; */
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	animation: fadeIn 0.2s ease-out forwards;
 }
 
 .backdrop {
-	animation: fadeIn 0.2s ease-out forwards;
 	top: 0;
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	z-index: 1000;
+	z-index: 1;
 	background-color: hsl(0, 0%, 0%, 80%);
 	display: flex;
 	justify-content: center;
@@ -38,7 +34,6 @@
 .dialog {
 	background-color: rgb(255, 255, 255);
 	z-index: 1001;
-	animation: fadeIn 0.2s ease-out forwards;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -47,9 +42,7 @@
 }
 
 .add {
-	/* position: fixed; */
-	left: 50%;
-	top: 10%;
+	position: relative;
 	width: 40px;
 	height: 40px;
 	border-radius: 20px;
@@ -61,10 +54,10 @@
 	justify-content: center;
 	align-items: center;
 	z-index: 1001;
-	transition: 0.2s;
+	transition: 0.1s;
 }
 
-.open {
-	transform: scale(1.5) rotate(45deg);
-	transition: 0.2s;
+.open{
+	transform: rotate(45deg);
+	color: rgb(255, 43, 78);
 }
