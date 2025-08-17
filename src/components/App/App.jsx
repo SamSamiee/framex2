@@ -23,6 +23,7 @@ function App() {
 			<div className={styles.Mainwrapper}>
 				<div className={styles.wrapper}>
 					<Header />
+
 					<div className={styles.Body}>
 						{cards.length >= 1 ? (
 							cards.map(({ description, scheduleDetail, id, imagesData }) => {

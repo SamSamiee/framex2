@@ -7,6 +7,8 @@ import Modal from "../Modal/Modal";
 import InsertCard from "../InsertCard/InsertCard";
 import { InsertContext } from "../../Contexts/InsertProvider";
 import { motion } from "framer-motion";
+import { FileContext } from "../../Contexts/FileProvider";
+import Arrow from "../../assets/arrow.svg";
 
 const MOTION = {
 	type: "spring",
@@ -17,6 +19,8 @@ const MOTION = {
 function Header() {
 	const [isOpen, setIsOpen] = React.useState(false);
 	const { modalOpen, setModalOpen } = React.useContext(InsertContext);
+
+	const { cards } = React.useContext(FileContext);
 	const [hoveredButton, setHoveredButton] = React.useState(null);
 	const id = React.useId();
 	async function logout() {
@@ -44,6 +48,12 @@ function Header() {
 			initial={{
 				borderRadius: 20,
 			}}>
+			{cards.length === 0 && !isOpen && !modalOpen ? (
+				<div className={styles.hint}>
+					<img src={Arrow} alt="arrow" />
+					<p>add a card from scratch</p>
+				</div>
+			) : null}
 			<motion.div
 				transition={MOTION}
 				className={styles.motionWrapper}

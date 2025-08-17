@@ -94,3 +94,34 @@
 	transition: all 0.3s ease;
 	transform: scale(1.05);
 } */
+
+
+
+.hint {
+	position: absolute;
+	/* background-color: red; */
+	top: 0;
+	right: 0;
+	display: flex;
+	opacity: 50%;
+	max-width: 400px;
+	transform: translateX(105%) translateY(50%);
+}
+
+.hint img {
+	min-width: 200px;
+	transform: scaleX(-1);
+	/* transform: rotate(20deg) scaleX(1) scaleY(-1); */
+}
+
+.hint p {
+	min-width: 170px;
+	transform: rotate(20deg) translateX(10%) translateY(100%)
+}
+
+@media (max-width: 1000px) {
+	.hint{
+		transform: rotate(90deg) translateX(70%) translateY(-250%);
+		display: none;
+	}
+}

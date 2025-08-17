@@ -31,15 +31,15 @@
 	left: 0;
 	transform: translateX(-110%) translateY(-50%);
 	display: flex;
-opacity: 50%;
+	opacity: 50%;
 }
 
-.hint img{
+.hint img {
 	min-width: 200px;
-transform: rotate(6deg)
+	transform: rotate(6deg);
 }
 
-.hint p{
+.hint p {
 	position: absolute;
 	right: 0;
 	transform: translateX(-100%) translateY(70%) rotate(-20deg);
@@ -152,4 +152,3 @@ transform: rotate(6deg)
 	justify-content: center;
 	/* background-color: red; */
 }
-
