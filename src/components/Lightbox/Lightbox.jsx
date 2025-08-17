@@ -7,10 +7,15 @@ import { InsertContext } from "../../Contexts/InsertProvider.js";
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
 import { setSelectionRange } from "@testing-library/user-event/dist/utils/index.js";
+import Arrow from '../../assets/arrow.svg'
 
 function Lightbox() {
-	const { setModalOpen, selectedThumbnails, setSelectedThumbnails, handleUploadCartWithLink } =
-		React.useContext(InsertContext);
+	const {
+		setModalOpen,
+		selectedThumbnails,
+		setSelectedThumbnails,
+		handleUploadCartWithLink,
+	} = React.useContext(InsertContext);
 	const inputRef = React.useRef(null);
 	const [isOpen, setIsOpen] = React.useState(true);
 	const { setImageDB, addFile, imageDB, deleteImage } =
@@ -34,6 +39,13 @@ function Lightbox() {
 			transition={{ type: "spring", stiffness: 200, damping: 25 }}
 			animate={animate}>
 			<motion.div layout="position" className={styles.handle}>
+				{(imageDB?.length === 0 || imageDB.every((item) => !item.lightbox)) &&
+				isOpen ? (
+					<div className={styles.hint}>
+						<p>start by adding images to the lightbox</p>
+						<img src={Arrow} alt="arrow" />
+					</div>
+				) : null}
 				<button
 					onClick={() => {
 						setIsOpen((p) => !p);
@@ -76,7 +88,7 @@ function Lightbox() {
 												: img
 										)
 									);
-									setSelectedThumbnails([])
+									setSelectedThumbnails([]);
 									handleUploadCartWithLink();
 								} catch (err) {
 									console.error(err);

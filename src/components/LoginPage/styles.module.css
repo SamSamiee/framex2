@@ -70,7 +70,7 @@ body {
 
 .signInBtn:hover {
 	cursor: pointer;
-	transform: scale(1.15) rotate(5deg);
+	transform: scale(1.15) rotate(-2deg);
 	box-shadow: var(--shadow-elevation-high);
 }
 

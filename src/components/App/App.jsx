@@ -35,7 +35,7 @@ function App() {
 								);
 							})
 						) : (
-							<h1>start adding cards</h1>
+							<p className={styles.initial}>no cards here yet...</p>
 						)}
 						<Lightbox modalOpen={modalOpen} setModalOpen={setModalOpen} />
 					</div>

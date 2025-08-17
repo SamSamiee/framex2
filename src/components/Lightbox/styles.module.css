@@ -25,11 +25,33 @@
 	transition: all 100ms ease-out;
 }
 
+.hint {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translateX(-110%) translateY(-50%);
+	display: flex;
+opacity: 50%;
+}
+
+.hint img{
+	min-width: 200px;
+transform: rotate(6deg)
+}
+
+.hint p{
+	position: absolute;
+	right: 0;
+	transform: translateX(-100%) translateY(70%) rotate(-20deg);
+	min-width: 170px;
+}
+
 .open {
 	transform: translateX(calc(18vw - 60px));
 }
 
 .handle {
+	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
