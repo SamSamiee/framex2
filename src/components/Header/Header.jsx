@@ -70,12 +70,15 @@ function Header() {
 										/>
 									)}
 									<motion.button
-										initial={{ opacity: 0, color: 'white' }}
+										initial={{ opacity: 0, color: "white" }}
 										animate={{
 											color: hoveredButton === label ? "black" : "#dedede",
 											opacity: isOpen ? 1 : 0,
 										}}
-										transition={{ color: { duration: 1 }, opacity: { duration: 0.2 } }}
+										transition={{
+											color: { duration: 1 },
+											opacity: { duration: 0.2 },
+										}}
 										className={styles.button}
 										onClick={logout}
 										onMouseEnter={() => setHoveredButton(label)}>
